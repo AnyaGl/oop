@@ -17,7 +17,7 @@ optional<Args> ParseArgs(int argc, char *argv[])
 {
   if (argc != 5) 
   {
-    cout << "Error: number of arguments\n"
+    cout << "Invalid number of arguments\n"
          << "Use: replace.exe <input file> <output file> <search string> "
             "<replace string>\n";
     return nullopt;
@@ -32,23 +32,32 @@ optional<Args> ParseArgs(int argc, char *argv[])
 
 string replaceSubstring(string newStr, string searchStr, string replaceStr)
 {
-    int foundPos;
-    int index = 0;
+    size_t foundPos;
+    size_t index = 0;
     string resultStr = "";
 
     while (index < newStr.length()) 
     {
-        foundPos = newStr.find(searchStr, index);
-        resultStr.append(newStr, index, foundPos - index);
-        if (foundPos != string::npos) 
+        if (searchStr.length() > 0)
         {
-            resultStr.append(replaceStr);
-            index = foundPos + searchStr.length();
+            foundPos = newStr.find(searchStr, index);
+            resultStr.append(newStr, index, foundPos - index);
+            if (foundPos != string::npos)
+            {
+                resultStr.append(replaceStr);
+                index = foundPos + searchStr.length();
+            }
+            else
+            {
+                index = newStr.length();
+            }
         }
-        else 
+        else
         {
-            index = newStr.length();
+            resultStr = newStr;
+            break;
         }
+
     }
     resultStr.append("\n");
 
