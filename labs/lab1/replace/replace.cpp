@@ -13,8 +13,10 @@ struct Args {
   string replaceString;
 };
 
-optional<Args> ParseArgs(int argc, char *argv[]) {
-  if (argc != 5) {
+optional<Args> ParseArgs(int argc, char *argv[]) 
+{
+  if (argc != 5) 
+  {
     cout << "Error: number of arguments\n"
          << "Use: replace.exe <input file> <output file> <search string> "
             "<replace string>\n";
@@ -30,20 +32,21 @@ optional<Args> ParseArgs(int argc, char *argv[]) {
 
 string replaceSubstring(string newStr, string searchStr, string replaceStr)
 {
-    int index, foundPos;
-    index = 0;
+    int foundPos;
+    int index = 0;
     string resultStr = "";
 
-    while (index < newStr.length()) {
+    while (index < newStr.length()) 
+    {
         foundPos = newStr.find(searchStr, index);
-
         resultStr.append(newStr, index, foundPos - index);
-
-        if (foundPos != string::npos) {
+        if (foundPos != string::npos) 
+        {
             resultStr.append(replaceStr);
             index = foundPos + searchStr.length();
         }
-        else {
+        else 
+        {
             index = newStr.length();
         }
     }
@@ -57,29 +60,43 @@ void copyFileWithReplace(ifstream& inFile, ofstream& outFile,
 {
     string currStr; 
     while (getline(inFile, currStr)) 
-    {              
+    {
         outFile << replaceSubstring(currStr, searchStr, replaceStr);
+    }
+    if (inFile.bad())
+    {
+        cout << "Failed to read data from input file\n";
+        exit(1);
+    }
+    if (!outFile.flush())
+    {
+        cout << "Failed to write data to output file\n";
+        exit(1);
     }
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) 
+{
 
   auto args = ParseArgs(argc, argv);
-  if (!args) {
+  if (!args) 
+  {
     return 1;
   }
 
   ifstream inFile;
   inFile.open(args->inputFileName);
-  if (!inFile.is_open()) {
-    cout << args->inputFileName << " could not be opened!\n";
+  if (!inFile.is_open()) 
+  {
+    cout << args->inputFileName << " could not be open for reading\n";
     return 1;
   }
 
   ofstream outFile;
   outFile.open(args->outputFileName);
-  if (!outFile.is_open()) {
-    cout << args->outputFileName << " could not be opened!\n";
+  if (!outFile.is_open()) 
+  {
+    cout << args->outputFileName << " could not be open for writing\n";
     return 1;
   }
 
