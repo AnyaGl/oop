@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="test-data">
+      <UniqueIdentifier>{b3b5db3f-0507-452b-b6b9-b4aef503a3d0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="replace.cpp">
@@ -21,6 +24,30 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="input.txt" />
+    <Text Include="input1.txt">
+      <Filter>test-data</Filter>
+    </Text>
+    <Text Include="output1.txt">
+      <Filter>test-data</Filter>
+    </Text>
+    <Text Include="input2.txt">
+      <Filter>test-data</Filter>
+    </Text>
+    <Text Include="output2.txt">
+      <Filter>test-data</Filter>
+    </Text>
+    <Text Include="input3.txt">
+      <Filter>test-data</Filter>
+    </Text>
+    <Text Include="output3.txt">
+      <Filter>test-data</Filter>
+    </Text>
+    <Text Include="input4.txt">
+      <Filter>test-data</Filter>
+    </Text>
+    <Text Include="output4.txt">
+      <Filter>test-data</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="replace.h">
