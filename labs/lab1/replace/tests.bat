@@ -1,4 +1,4 @@
- @echo off
+п»ї @echo off
  
  SET Program="%~1"
 
@@ -7,39 +7,39 @@
     exit /B 1
  )
 
- REM Замена пустой строки
+ REM Р—Р°РјРµРЅР° РїСѓСЃС‚РѕР№ СЃС‚СЂРѕРєРё
  %Program% test-data\input1.txt "%TEMP%\output.txt" "" "*" || goto err
  fc test-data\output1.txt "%TEMP%\output.txt" > nul || goto err
  echo Test 1 passed
 
- REM Замена на пустую строку
+ REM Р—Р°РјРµРЅР° РЅР° РїСѓСЃС‚СѓСЋ СЃС‚СЂРѕРєСѓ
  %Program% test-data\input2.txt "%TEMP%\output.txt" "_" "" || goto err
  fc test-data\output2.txt "%TEMP%\output.txt" > nul || goto err
  echo Test 2 passed
 
- REM Замена строки, которая многократно входит в строку-заменитель
+ REM Р—Р°РјРµРЅР° СЃС‚СЂРѕРєРё, РєРѕС‚РѕСЂР°СЏ РјРЅРѕРіРѕРєСЂР°С‚РЅРѕ РІС…РѕРґРёС‚ РІ СЃС‚СЂРѕРєСѓ-Р·Р°РјРµРЅРёС‚РµР»СЊ
  %Program% test-data\input3.txt "%TEMP%\output.txt" "ma" "mama" || goto err
  fc test-data\output3.txt "%TEMP%\output.txt" > nul || goto err
  echo Test 3 passed
 
- REM Замена подстроки "1231234" внутри текста "12312312345"
+ REM Р—Р°РјРµРЅР° РїРѕРґСЃС‚СЂРѕРєРё "1231234" РІРЅСѓС‚СЂРё С‚РµРєСЃС‚Р° "12312312345"
  %Program% test-data\input4.txt "%TEMP%\output.txt" "1231234" "*" || goto err
  fc test-data\output4.txt "%TEMP%\output.txt" > nul || goto err
  echo Test 4 passed
 
- REM Копирование из несуществующего файла
+ REM РљРѕРїРёСЂРѕРІР°РЅРёРµ РёР· РЅРµСЃСѓС‰РµСЃС‚РІСѓСЋС‰РµРіРѕ С„Р°Р№Р»Р°
  %Program% MissingFile.txt "%TEMP%\output.txt" "_" "*" && goto err
  echo Test 5 passed
 
- REM Неверно заданные аргументы командной строки: нет одного из файлов
+ REM РќРµРІРµСЂРЅРѕ Р·Р°РґР°РЅРЅС‹Рµ Р°СЂРіСѓРјРµРЅС‚С‹ РєРѕРјР°РЅРґРЅРѕР№ СЃС‚СЂРѕРєРё: РЅРµС‚ РѕРґРЅРѕРіРѕ РёР· С„Р°Р№Р»РѕРІ
  %Program% test-data\input1.txt "_" "*" && goto err
  echo Test 6 passed
 
- REM Неверно заданные аргументы командной строки: нет одной из строк
+ REM РќРµРІРµСЂРЅРѕ Р·Р°РґР°РЅРЅС‹Рµ Р°СЂРіСѓРјРµРЅС‚С‹ РєРѕРјР°РЅРґРЅРѕР№ СЃС‚СЂРѕРєРё: РЅРµС‚ РѕРґРЅРѕР№ РёР· СЃС‚СЂРѕРє
  %Program% test-data\input1.txt "%TEMP%\output.txt" "*" && goto err
  echo Test 7 passed
 
- REM Неверно заданные аргументы командной строки: нет ни одного аргумента
+ REM РќРµРІРµСЂРЅРѕ Р·Р°РґР°РЅРЅС‹Рµ Р°СЂРіСѓРјРµРЅС‚С‹ РєРѕРјР°РЅРґРЅРѕР№ СЃС‚СЂРѕРєРё: РЅРµС‚ РЅРё РѕРґРЅРѕРіРѕ Р°СЂРіСѓРјРµРЅС‚Р°
  %Program% && goto err
  echo Test 8 passed
 
