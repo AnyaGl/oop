@@ -22,4 +22,9 @@
   <ItemGroup>
     <Text Include="input.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="replace.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+  </ItemGroup>
 </Project>

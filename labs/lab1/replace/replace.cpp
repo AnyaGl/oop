@@ -2,6 +2,7 @@
 #include <iostream>
 #include <optional>
 #include <string>
+#include "replace.h"
 
 using namespace std;
 
@@ -25,6 +26,40 @@ optional<Args> ParseArgs(int argc, char *argv[]) {
   args.searchString = argv[3];
   args.replaceString = argv[4];
   return args;
+}
+
+string replaceSubstring(string newStr, string searchStr, string replaceStr)
+{
+    int index, foundPos;
+    index = 0;
+    string resultStr = "";
+
+    while (index < newStr.length()) {
+        foundPos = newStr.find(searchStr, index);
+
+        resultStr.append(newStr, index, foundPos - index);
+
+        if (foundPos != string::npos) {
+            resultStr.append(replaceStr);
+            index = foundPos + searchStr.length();
+        }
+        else {
+            index = newStr.length();
+        }
+    }
+    resultStr.append("\n");
+
+    return resultStr;
+}
+
+void copyFileWithReplace(ifstream& inFile, ofstream& outFile, 
+                            string searchStr, string replaceStr)
+{
+    string currStr; 
+    while (getline(inFile, currStr)) 
+    {              
+        outFile << replaceSubstring(currStr, searchStr, replaceStr);
+    }
 }
 
 int main(int argc, char *argv[]) {
@@ -51,27 +86,7 @@ int main(int argc, char *argv[]) {
   string searchStr = args->searchString;
   string replaceStr = args->replaceString;
 
-  string currStr, resultStr;
-  int index, foundPos;
-
-  while (getline(inFile, currStr)) {
-    index = 0;
-    resultStr = "";
-
-    while (index < currStr.length()) {
-      foundPos = currStr.find(searchStr, index);
-
-      resultStr.append(currStr, index, foundPos - index);
-
-      if (foundPos != string::npos) {
-        resultStr.append(replaceStr);
-        index = foundPos + searchStr.length();
-      } else {
-        index = currStr.length();
-      }
-    }
-    outFile << resultStr << '\n';
-  }
+  copyFileWithReplace(inFile, outFile, searchStr, replaceStr);
 
   return 0;
 }
