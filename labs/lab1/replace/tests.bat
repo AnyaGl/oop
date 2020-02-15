@@ -46,17 +46,21 @@
  %Program% MissingFile.txt "%TEMP%\output.txt" "_" "*" && goto err
  echo Test 8 passed
 
+ REM Копирование в несуществующий файл
+ %Program% test-data\input1.txt not:\out.txt "_" "*" && goto err
+ echo Test 9 passed
+
  REM Неверно заданные аргументы командной строки: нет одного из файлов
  %Program% test-data\input1.txt "_" "*" && goto err
- echo Test 9 passed
+ echo Test 10 passed
 
  REM Неверно заданные аргументы командной строки: нет одной из строк
  %Program% test-data\input1.txt "%TEMP%\output.txt" "*" && goto err
- echo Test 10 passed
+ echo Test 11 passed
 
  REM Неверно заданные аргументы командной строки: нет ни одного аргумента
  %Program% && goto err
- echo Test 11 passed
+ echo Test 12 passed
 
  echo All tests passed successfully
  exit /B 0
