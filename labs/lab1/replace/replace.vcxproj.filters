@@ -14,7 +14,7 @@
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
     <Filter Include="test-data">
-      <UniqueIdentifier>{b3b5db3f-0507-452b-b6b9-b4aef503a3d0}</UniqueIdentifier>
+      <UniqueIdentifier>{f523696f-4597-403f-9f40-6cf6d9bdb253}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -24,28 +24,46 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="input.txt" />
-    <Text Include="input1.txt">
+    <Text Include="test-data\input2.txt">
       <Filter>test-data</Filter>
     </Text>
-    <Text Include="output1.txt">
+    <Text Include="test-data\input3.txt">
       <Filter>test-data</Filter>
     </Text>
-    <Text Include="input2.txt">
+    <Text Include="test-data\input4.txt">
       <Filter>test-data</Filter>
     </Text>
-    <Text Include="output2.txt">
+    <Text Include="test-data\input5.txt">
       <Filter>test-data</Filter>
     </Text>
-    <Text Include="input3.txt">
+    <Text Include="test-data\input6.txt">
       <Filter>test-data</Filter>
     </Text>
-    <Text Include="output3.txt">
+    <Text Include="test-data\output2.txt">
       <Filter>test-data</Filter>
     </Text>
-    <Text Include="input4.txt">
+    <Text Include="test-data\output3.txt">
       <Filter>test-data</Filter>
     </Text>
-    <Text Include="output4.txt">
+    <Text Include="test-data\output4.txt">
+      <Filter>test-data</Filter>
+    </Text>
+    <Text Include="test-data\output5.txt">
+      <Filter>test-data</Filter>
+    </Text>
+    <Text Include="test-data\output6.txt">
+      <Filter>test-data</Filter>
+    </Text>
+    <Text Include="test-data\input7.txt">
+      <Filter>test-data</Filter>
+    </Text>
+    <Text Include="test-data\output7.txt">
+      <Filter>test-data</Filter>
+    </Text>
+    <Text Include="test-data\input1.txt">
+      <Filter>test-data</Filter>
+    </Text>
+    <Text Include="test-data\output1.txt">
       <Filter>test-data</Filter>
     </Text>
   </ItemGroup>
