@@ -2,117 +2,128 @@
 #include <iostream>
 #include <optional>
 #include <string>
-#include "replace.h"
 
 using namespace std;
 
-struct Args {
-  string inputFileName;
-  string outputFileName;
-  string searchString;
-  string replaceString;
+struct Args
+{
+	string inputFileName;
+	string outputFileName;
+	string searchString;
+	string replaceString;
 };
 
-optional<Args> ParseArgs(int argc, char *argv[]) 
+optional<Args> ParseArgs(int argc, char* argv[])
 {
-  if (argc != 5) 
-  {
-    cout << "Invalid number of arguments\n"
-         << "Use: replace.exe <input file> <output file> <search string> "
-            "<replace string>\n";
-    return nullopt;
-  }
-  Args args;
-  args.inputFileName = argv[1];
-  args.outputFileName = argv[2];
-  args.searchString = argv[3];
-  args.replaceString = argv[4];
-  return args;
+	if (argc != 5)
+	{
+		cout << "Invalid number of arguments\n"
+			 << "Use: replace.exe <input file> <output file> <search string> "
+				"<replace string>\n";
+		return nullopt;
+	}
+	Args args;
+	args.inputFileName = argv[1];
+	args.outputFileName = argv[2];
+	args.searchString = argv[3];
+	args.replaceString = argv[4];
+	return args;
 }
 
-string replaceSubstring(string newStr, string searchStr, string replaceStr)
+string ReplaceSubstring(const string& str, const string& searchStr, const string& replaceStr)
 {
-    size_t foundPos;
-    size_t index = 0;
-    string resultStr = "";
+	size_t foundPos;
+	size_t index = 0;
+	string resultStr;
 
-    while (index < newStr.length()) 
-    {
-        if (searchStr.length() > 0)
-        {
-            foundPos = newStr.find(searchStr, index);
-            resultStr.append(newStr, index, foundPos - index);
-            if (foundPos != string::npos)
-            {
-                resultStr.append(replaceStr);
-                index = foundPos + searchStr.length();
-            }
-            else
-            {
-                index = newStr.length();
-            }
-        }
-        else
-        {
-            resultStr = newStr;
-            break;
-        }
+	if (searchStr.length() > 0)
+	{
+		while (index < str.length())
+		{
+			foundPos = str.find(searchStr, index);
+			if (foundPos != string::npos)
+			{
+				resultStr.append(str, index, foundPos - index);
+				resultStr.append(replaceStr);
+				index = foundPos + searchStr.length();
+			}
+			else
+			{
+				resultStr.append(str, index, str.length());
+				break;
+			}
+		}
+	}
+	else
+	{
+		resultStr = str;
+	}
 
-    }
-    resultStr.append("\n");
-
-    return resultStr;
+	return resultStr;
 }
 
-void copyFileWithReplace(ifstream& inFile, ofstream& outFile, 
-                            string searchStr, string replaceStr)
+void CopyFileWithReplace(istream& inFile, ostream& outFile,
+	const string& searchStr, const string& replaceStr, bool& wasError)
 {
-    string currStr; 
-    while (getline(inFile, currStr)) 
-    {
-        outFile << replaceSubstring(currStr, searchStr, replaceStr);
-    }
-    if (inFile.bad())
-    {
-        cout << "Failed to read data from input file\n";
-        exit(1);
-    }
-    if (!outFile.flush())
-    {
-        cout << "Failed to write data to output file\n";
-        exit(1);
-    }
+	string currStr;
+	while (getline(inFile, currStr))
+	{
+		outFile << ReplaceSubstring(currStr, searchStr, replaceStr) << '\n';
+	}
+	if (inFile.bad())
+	{
+		cout << "Failed to read data from input file\n";
+		wasError = true;
+		return;
+	}
+	if (!outFile.flush())
+	{
+		cout << "Failed to write data to output file\n";
+		wasError = true;
+		return;
+	}
 }
 
-int main(int argc, char *argv[]) 
+void OpenAndCopyFileWithReplace(const string& inFileName, const string& outFileName,
+	const string& searchStr, const string& replaceStr, bool& wasError)
 {
+	ifstream inFile;
+	inFile.open(inFileName);
+	if (!inFile.is_open())
+	{
+		cout << inFileName << " could not be open for reading\n";
+		wasError = true;
+		return;
+	}
 
-  auto args = ParseArgs(argc, argv);
-  if (!args) 
-  {
-    return 1;
-  }
+	ofstream outFile;
+	outFile.open(outFileName);
+	if (!outFile.is_open())
+	{
+		cout << outFileName << " could not be open for writing\n";
+		wasError = true;
+		return;
+	}
 
-  ifstream inFile;
-  inFile.open(args->inputFileName);
-  if (!inFile.is_open()) 
-  {
-    cout << args->inputFileName << " could not be open for reading\n";
-    return 1;
-  }
+	CopyFileWithReplace(inFile, outFile, searchStr, replaceStr, wasError);
+}
 
-  ofstream outFile;
-  outFile.open(args->outputFileName);
-  if (!outFile.is_open()) 
-  {
-    cout << args->outputFileName << " could not be open for writing\n";
-    return 1;
-  }
+int main(int argc, char* argv[])
+{
+	auto args = ParseArgs(argc, argv);
+	if (!args)
+	{
+		return 1;
+	}
 
-  string searchStr = args->searchString;
-  string replaceStr = args->replaceString;
+	bool wasError = false;
+	OpenAndCopyFileWithReplace(args->inputFileName, args->outputFileName,
+		args->searchString, args->replaceString, wasError);
 
-  copyFileWithReplace(inFile, outFile, searchStr, replaceStr);
+	if (wasError)
+	{
+		return 1;
+	}
 
-  return 0;
+	return 0;
 }
