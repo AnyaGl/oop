@@ -171,6 +171,7 @@
     <Text Include="test-data\input4.txt" />
     <Text Include="test-data\input5.txt" />
     <Text Include="test-data\input6.txt" />
+    <Text Include="test-data\input8.txt" />
     <Text Include="test-data\output1.txt" />
     <Text Include="test-data\output7.txt" />
     <Text Include="test-data\output2.txt" />
@@ -178,6 +179,7 @@
     <Text Include="test-data\output4.txt" />
     <Text Include="test-data\output5.txt" />
     <Text Include="test-data\output6.txt" />
+    <Text Include="test-data\output8.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="replace.h" />

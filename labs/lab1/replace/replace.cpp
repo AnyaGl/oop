@@ -49,7 +49,7 @@ string ReplaceSubstring(const string& str, const string& searchStr, const string
 			}
 			else
 			{
-				resultStr.append(str, index, str.length());
+				resultStr.append(str, index, str.length() - index);
 				break;
 			}
 		}
@@ -62,8 +62,8 @@ string ReplaceSubstring(const string& str, const string& searchStr, const string
 	return resultStr;
 }
 
-void CopyFileWithReplace(istream& inFile, ostream& outFile,
-	const string& searchStr, const string& replaceStr, bool& wasError)
+bool CopyFileWithReplace(istream& inFile, ostream& outFile,
+	const string& searchStr, const string& replaceStr)
 {
 	string currStr;
 	while (getline(inFile, currStr))
@@ -73,27 +73,26 @@ void CopyFileWithReplace(istream& inFile, ostream& outFile,
 	if (inFile.bad())
 	{
 		cout << "Failed to read data from input file\n";
-		wasError = true;
-		return;
+		return false;
 	}
 	if (!outFile.flush())
 	{
 		cout << "Failed to write data to output file\n";
-		wasError = true;
-		return;
+		return false;
 	}
+
+	return true;
 }
 
-void OpenAndCopyFileWithReplace(const string& inFileName, const string& outFileName,
-	const string& searchStr, const string& replaceStr, bool& wasError)
+bool OpenAndCopyFileWithReplace(const string& inFileName, const string& outFileName,
+	const string& searchStr, const string& replaceStr)
 {
 	ifstream inFile;
 	inFile.open(inFileName);
 	if (!inFile.is_open())
 	{
 		cout << inFileName << " could not be open for reading\n";
-		wasError = true;
-		return;
+		return false;
 	}
 
 	ofstream outFile;
@@ -101,11 +100,15 @@ void OpenAndCopyFileWithReplace(const string& inFileName, const string& outFileN
 	if (!outFile.is_open())
 	{
 		cout << outFileName << " could not be open for writing\n";
-		wasError = true;
-		return;
+		return false;
 	}
 
-	CopyFileWithReplace(inFile, outFile, searchStr, replaceStr, wasError);
+	if (!CopyFileWithReplace(inFile, outFile, searchStr, replaceStr))
+	{
+		return false;
+	}
+
+	return true;
 }
 
 int main(int argc, char* argv[])
@@ -116,11 +119,10 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 
-	bool wasError = false;
-	OpenAndCopyFileWithReplace(args->inputFileName, args->outputFileName,
-		args->searchString, args->replaceString, wasError);
+	bool resultOfCopy = OpenAndCopyFileWithReplace(args->inputFileName, args->outputFileName,
+		args->searchString, args->replaceString);
 
-	if (wasError)
+	if (!resultOfCopy)
 	{
 		return 1;
 	}

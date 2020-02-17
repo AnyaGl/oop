@@ -66,6 +66,12 @@
     <Text Include="test-data\output1.txt">
       <Filter>test-data</Filter>
     </Text>
+    <Text Include="test-data\input8.txt">
+      <Filter>test-data</Filter>
+    </Text>
+    <Text Include="test-data\output8.txt">
+      <Filter>test-data</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="replace.h">
