@@ -40,5 +40,8 @@
     <Text Include="test-data\output4.txt">
       <Filter>test-data</Filter>
     </Text>
+    <Text Include="test-data\output5.txt">
+      <Filter>test-data</Filter>
+    </Text>
   </ItemGroup>
 </Project>

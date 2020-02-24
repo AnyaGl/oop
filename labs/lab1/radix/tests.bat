@@ -12,7 +12,7 @@
  fc test-data\output1.txt "%TEMP%\output.txt" > nul || goto err
  echo Test 1 passed
 
- REM Convert INT_MIX
+ REM Convert INT_MIN
  %Program% 10 2 -2147483648 > "%TEMP%\output.txt" || goto err
  fc test-data\output2.txt "%TEMP%\output.txt" > nul || goto err
  echo Test 2 passed
@@ -27,37 +27,42 @@
  fc test-data\output4.txt "%TEMP%\output.txt" > nul || goto err
  echo Test 4 passed
 
+ REM Convert negative number
+ %Program% 16 36 -1aF > "%TEMP%\output.txt" || goto err
+ fc test-data\output5.txt "%TEMP%\output.txt" > nul || goto err
+ echo Test 5 passed
+
  REM Overflow (positive number)
  %Program% 10 8 2147483648 && goto err
- echo Test 5 passed
+ echo Test 6 passed
 
  REM Overflow (negative number)
  %Program% 10 8 -2147483649 && goto err
- echo Test 6 passed
+ echo Test 7 passed
 
  REM Invalid character
  %Program% 10 8 12*3 && goto err
- echo Test 7 passed
+ echo Test 8 passed
 
  REM Invalid character (digit)
  %Program% 3 8 312 && goto err
- echo Test 8 passed
+ echo Test 9 passed
 
  REM Invalid character (letter)
  %Program% 11 8 a1b && goto err
- echo Test 9 passed
+ echo Test 10 passed
 
  REM Invalid source radix
  %Program% 37 8 123 && goto err
- echo Test 10 passed
+ echo Test 11 passed
 
  REM Invalid destination radix
  %Program% 3 1 12112 && goto err
- echo Test 11 passed
+ echo Test 12 passed
 
 REM Invalid command line arguments
 %Program% 3 12112 && goto err
-echo Test 12 passed
+echo Test 13 passed
 
 echo All tests passed successfully
 exit /B 0
