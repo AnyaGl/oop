@@ -13,10 +13,32 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="test-data">
+      <UniqueIdentifier>{796b28d0-4e47-420c-9387-fb3237632758}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="radix.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="tests.bat">
+      <Filter>Исходные файлы</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="test-data\output1.txt">
+      <Filter>test-data</Filter>
+    </Text>
+    <Text Include="test-data\output2.txt">
+      <Filter>test-data</Filter>
+    </Text>
+    <Text Include="test-data\output3.txt">
+      <Filter>test-data</Filter>
+    </Text>
+    <Text Include="test-data\output4.txt">
+      <Filter>test-data</Filter>
+    </Text>
   </ItemGroup>
 </Project>

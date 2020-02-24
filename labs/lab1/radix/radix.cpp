@@ -100,12 +100,12 @@ bool SafeMult(int a, int b, int& result)
 	return true;
 }
 
-int GetDigit(char digit, int radix, bool& wasError)
+int GetDigit(char sourceDigit, int radix, bool& wasError)
 {
 	wasError = false;
 	int resultDigit = -1;
 	char maxDigit;
-	digit = toupper(digit);
+	char digit = toupper(sourceDigit);
 	if (radix > 10)
 	{
 		maxDigit = radix - 11 + 'A';
@@ -126,7 +126,7 @@ int GetDigit(char digit, int radix, bool& wasError)
 	else
 	{
 		wasError = true;
-		std::cout << "Invalid character: " << digit << '\n';
+		std::cout << "Invalid character: " << sourceDigit << '\n';
 	}
 
 	return resultDigit;
