@@ -105,7 +105,7 @@ int GetDigit(char digit, int radix, bool& wasError)
 	wasError = false;
 	int resultDigit = -1;
 	char maxDigit;
-
+	digit = toupper(digit);
 	if (radix > 10)
 	{
 		maxDigit = radix - 11 + 'A';
@@ -195,16 +195,13 @@ std::string IntToString(int n, int radix, bool& wasError)
 	{
 		wasError = true;
 	}
-
 	if (n == 0)
 	{
 		return "0";
 	}
-
 	std::string resultStr;
 	int insertPoint = 0;
 	bool negativeNum = false;
-
 	if (!wasError)
 	{
 		if (n < 0)
@@ -214,9 +211,6 @@ std::string IntToString(int n, int radix, bool& wasError)
 		while (n != 0)
 		{
 			std::string digit = GetDigit(abs(n % radix));
-
-			
-
 			resultStr.insert(0, digit);
 			n /= radix;
 		}
@@ -226,7 +220,6 @@ std::string IntToString(int n, int radix, bool& wasError)
 			resultStr.insert(0, "-");
 		}
 	}
-
 	return resultStr;
 }
 
@@ -239,15 +232,17 @@ int main(int argc, char* argv[])
 	}
 
 	bool wasError = false;
-	int n = StringToInt(args->value, args->sourceRadix, wasError);
+	int number = StringToInt(args->value, args->sourceRadix, wasError);
 	if (wasError)
 	{
 		return 1;
 	}
-	else
+	std::string str = IntToString(number, args->destinationRadix, wasError);
+	if (wasError)
 	{
-		std::cout << IntToString(n, args->destinationRadix, wasError) << '\n';
+		return 1;
 	}
+	std::cout << str <<'\n';
 
 	return 0;
 }
