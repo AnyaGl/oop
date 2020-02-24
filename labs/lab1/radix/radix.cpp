@@ -2,18 +2,6 @@
 #include <optional>
 #include <string>
 
-bool IsRadixCorrect(int radix)
-{
-	const int maxRadix = 'Z' - 'A' + 11;
-	if (radix < 2 || radix > maxRadix)
-	{
-		std::cout << "Invalid radix\n"
-				  << "Use radix from range[2, " << maxRadix << "]\n";
-		return false;
-	}
-	return true;
-}
-
 struct Args
 {
 	int sourceRadix = 0;
@@ -97,6 +85,18 @@ bool SafeMult(int a, int b, int& result)
 	}
 
 	result = a * b;
+	return true;
+}
+
+bool IsRadixCorrect(int radix)
+{
+	const int maxRadix = 'Z' - 'A' + 11;
+	if (radix < 2 || radix > maxRadix)
+	{
+		std::cout << "Invalid radix\n"
+				  << "Use radix from range[2, " << maxRadix << "]\n";
+		return false;
+	}
 	return true;
 }
 
@@ -223,6 +223,23 @@ std::string IntToString(int n, int radix, bool& wasError)
 	return resultStr;
 }
 
+bool ConvertNumber(int sourceRadix, int destinationRadix, const std::string& value)
+{
+	bool wasError = false;
+	int number = StringToInt(value, sourceRadix, wasError);
+	if (wasError)
+	{
+		return false;
+	}
+	std::string str = IntToString(number, destinationRadix, wasError);
+	if (wasError)
+	{
+		return false;
+	}
+	std::cout << str << '\n';
+	return true;
+}
+
 int main(int argc, char* argv[])
 {
 	auto args = ParseArgs(argc, argv);
@@ -231,18 +248,9 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 
-	bool wasError = false;
-	int number = StringToInt(args->value, args->sourceRadix, wasError);
-	if (wasError)
+	if (!ConvertNumber(args->sourceRadix, args->destinationRadix, args->value))
 	{
 		return 1;
 	}
-	std::string str = IntToString(number, args->destinationRadix, wasError);
-	if (wasError)
-	{
-		return 1;
-	}
-	std::cout << str <<'\n';
-
 	return 0;
 }
