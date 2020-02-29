@@ -2,7 +2,7 @@
 #include <iostream>
 #include <optional>
 
-const int matrixSize = 3;
+typedef double Matrix3x3[3][3];
 
 struct Args
 {
@@ -24,11 +24,11 @@ std::optional<Args> ParseArgs(int argc, char* argv[])
 	return args;
 }
 
-void PrintMatrix(double (&matrix)[matrixSize][matrixSize])
+void PrintMatrix(const Matrix3x3& matrix)
 {
-	for (int i = 0; i < matrixSize; i++)
+	for (int i = 0; i < 3; i++)
 	{
-		for (int j = 0; j < matrixSize; j++)
+		for (int j = 0; j < 3; j++)
 		{
 			printf("%.3f ", matrix[i][j]);
 		}
@@ -36,7 +36,7 @@ void PrintMatrix(double (&matrix)[matrixSize][matrixSize])
 	}
 }
 
-double CountDeterminant(const double (&matrix)[3][3])
+double CountDeterminant(const Matrix3x3& matrix)
 {
 	double det = matrix[0][0] * matrix[1][1] * matrix[2][2]
 		+ matrix[0][1] * matrix[1][2] * matrix[2][0]
@@ -47,7 +47,7 @@ double CountDeterminant(const double (&matrix)[3][3])
 	return det;
 }
 
-void GetUnionMatrix(double (&matrix)[matrixSize][matrixSize], double (&unionMatrix)[matrixSize][matrixSize])
+void GetUnionMatrix(const Matrix3x3& matrix, Matrix3x3& unionMatrix)
 {
 	unionMatrix[0][0] = matrix[1][1] * matrix[2][2] - matrix[2][1] * matrix[1][2];
 	unionMatrix[1][0] = -(matrix[1][0] * matrix[2][2] - matrix[2][0] * matrix[1][2]);
@@ -61,20 +61,20 @@ void GetUnionMatrix(double (&matrix)[matrixSize][matrixSize], double (&unionMatr
 	unionMatrix[1][2] = -(matrix[0][0] * matrix[1][2] - matrix[1][0] * matrix[0][2]);
 	unionMatrix[2][2] = matrix[0][0] * matrix[1][1] - matrix[1][0] * matrix[0][1];
 
-	for (int i = 0; i < matrixSize; i++)
+	for (int i = 0; i < 3; i++)
 	{
-		for (int j = 0; j < matrixSize; j++)
+		for (int j = 0; j < 3; j++)
 		{
-			double eps = 0.001;
-			if (abs(unionMatrix[i][j]) <= eps)
+			double eps = 0.0005;
+			if (abs(unionMatrix[i][j]) < eps)
 			{
-				unionMatrix[i][j] = 0;			
+				unionMatrix[i][j] = 0;
 			}
 		}
 	}
 }
 
-bool GetInvertMatrix(double (&matrix)[matrixSize][matrixSize], double (&resultMatrix)[matrixSize][matrixSize])
+bool GetInvertMatrix(const Matrix3x3& matrix, Matrix3x3& resultMatrix)
 {
 	double det = CountDeterminant(matrix);
 	if (det == 0)
@@ -85,11 +85,82 @@ bool GetInvertMatrix(double (&matrix)[matrixSize][matrixSize], double (&resultMa
 
 	GetUnionMatrix(matrix, resultMatrix);
 
-	for (int i = 0; i < matrixSize; i++)
+	for (int i = 0; i < 3; i++)
 	{
-		for (int j = 0; j < matrixSize; j++)
+		for (int j = 0; j < 3; j++)
 		{
 			resultMatrix[i][j] /= det;
+		}
+	}
+	return true;
+}
+
+bool ReadMatrixFromFile(std::istream& input, Matrix3x3& matrix)
+{
+	/*enum State
+	{
+		Minus,
+		Digit,
+		Dot,
+		Delimiter
+	};
+	State state;*/
+
+	char ch;
+	int i = 0;
+	int j = 0;
+	int multiplier = 1;
+	bool findDot = false;
+	std::string intPart, fractPart;
+
+	while (input.get(ch))
+	{
+		if (ch == '-' && intPart == "" && multiplier == 1)
+		{
+			multiplier = -1;
+		}
+		else if (isdigit(ch))
+		{
+			if (findDot)
+			{
+				fractPart += ch;
+			}
+			else
+			{
+				intPart += ch;
+			}
+		}
+		else if (ch == '.' && !findDot)
+		{
+			findDot = true;
+		}
+		else if (ch == ' ' || ch == '\t' || ch == '\n')
+		{
+			reverse(fractPart.begin(), fractPart.end());
+			matrix[i][j] = multiplier * std::atof((intPart + "." + fractPart).c_str());
+			intPart = "";
+			fractPart = "";
+			findDot = false;
+			multiplier = 1;
+			if (ch == '\n')
+			{
+				if (j != 2)
+				{
+					std::cout << "Invalid number of numbers" << '\n';
+					return false;
+				}
+				j = 0;
+				i += 1;
+			}
+			else
+			{
+				j += 1;
+			}
+		}
+		else
+		{
+			std::cout << "Invalid character: " << ch << '\n';
+			return false;
 		}
 	}
 	return true;
@@ -105,18 +176,25 @@ bool InvertMatrixFromFile(const std::string& inputFileName)
 		return false;
 	}
 
-	double matrix[matrixSize][matrixSize];
-	for (int i = 0; i < matrixSize; i++)
+	Matrix3x3 matrix;
+	if (!ReadMatrixFromFile(input, matrix))
 	{
-		for (int j = 0; j < matrixSize; j++)
+		return false;
+	}
+	/*for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 3; j++)
 		{
 			input >> matrix[i][j];
 		}
-	}
+	}*/
 
-	double resultMatrix[matrixSize][matrixSize];
+	PrintMatrix(matrix);
+
+	Matrix3x3 resultMatrix;
 	if (GetInvertMatrix(matrix, resultMatrix))
 	{
+		std::cout << "result matrix: " << '\n';
 		PrintMatrix(resultMatrix);
 		return true;
 	}
