@@ -97,15 +97,6 @@ bool GetInvertMatrix(const Matrix3x3& matrix, Matrix3x3& resultMatrix)
 
 bool ReadMatrixFromFile(std::istream& input, Matrix3x3& matrix)
 {
-	/*enum State
-	{
-		Minus,
-		Digit,
-		Dot,
-		Delimiter
-	};
-	State state;*/
-
 	char ch;
 	int i = 0;
 	int j = 0;
@@ -113,13 +104,47 @@ bool ReadMatrixFromFile(std::istream& input, Matrix3x3& matrix)
 	bool findDot = false;
 	std::string intPart, fractPart;
 
-	while (input.get(ch))
+	while (!input.eof() && i < 3)
 	{
+		input.get(ch);
+		if ((ch == ' ' || ch == '\t' || ch == '\n' || input.eof()) && (!findDot || fractPart != ""))
+		{
+			if (intPart != "")
+			{
+				reverse(fractPart.begin(), fractPart.end());
+				matrix[i][j] = multiplier * std::atof((intPart + "." + fractPart).c_str());
+				if (ch == '\n' || input.eof())
+				{
+					if (j != 2)
+					{
+						std::cout << "Invalid number of elements" << '\n';
+						return false;
+					}
+					j = 0;
+					i += 1;
+				}
+				else
+				{
+					j += 1;
+				}
+			}
+			intPart = "";
+			fractPart = "";
+			findDot = false;
+			multiplier = 1;
+			continue;
+		}
 		if (ch == '-' && intPart == "" && multiplier == 1)
 		{
 			multiplier = -1;
+			continue;
 		}
-		else if (isdigit(ch))
+		if (ch == '.' && !findDot && intPart != "")
+		{
+			findDot = true;
+			continue;
+		}
+		if (isdigit(ch))
 		{
 			if (findDot)
 			{
@@ -129,39 +154,16 @@ bool ReadMatrixFromFile(std::istream& input, Matrix3x3& matrix)
 			{
 				intPart += ch;
 			}
+			continue;
 		}
-		else if (ch == '.' && !findDot)
-		{
-			findDot = true;
-		}
-		else if (ch == ' ' || ch == '\t' || ch == '\n')
-		{
-			reverse(fractPart.begin(), fractPart.end());
-			matrix[i][j] = multiplier * std::atof((intPart + "." + fractPart).c_str());
-			intPart = "";
-			fractPart = "";
-			findDot = false;
-			multiplier = 1;
-			if (ch == '\n')
-			{
-				if (j != 2)
-				{
-					std::cout << "Invalid number of numbers" << '\n';
-					return false;
-				}
-				j = 0;
-				i += 1;
-			}
-			else
-			{
-				j += 1;
-			}
-		}
-		else
-		{
-			std::cout << "Invalid character: " << ch << '\n';
-			return false;
-		}
+
+		std::cout << "Invalid character: '" << ch << "'\n";
+		return false;
+	}
+	if (i != 3)
+	{
+		std::cout << "Invalid number of elements" << '\n';
+		return false;
 	}
 	return true;
 }
@@ -181,13 +183,6 @@ bool InvertMatrixFromFile(const std::string& inputFileName)
 	{
 		return false;
 	}
-	/*for (int i = 0; i < 3; i++)
-	{
-		for (int j = 0; j < 3; j++)
-		{
-			input >> matrix[i][j];
-		}
-	}*/
 
 	PrintMatrix(matrix);
 
