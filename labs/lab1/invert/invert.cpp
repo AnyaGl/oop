@@ -79,7 +79,7 @@ bool GetInvertMatrix(const Matrix3x3& matrix, Matrix3x3& resultMatrix)
 	double det = CountDeterminant(matrix);
 	if (det == 0)
 	{
-		std::cout << "Determinant is 0. The inverse matrix does not exist.";
+		std::cout << "Determinant is 0. The inverse matrix does not exist.\n";
 		return false;
 	}
 
@@ -111,13 +111,16 @@ bool ReadMatrixFromFile(std::istream& input, Matrix3x3& matrix)
 		{
 			if (intPart != "")
 			{
-				reverse(fractPart.begin(), fractPart.end());
-				matrix[i][j] = multiplier * std::atof((intPart + "." + fractPart).c_str());
+				if (j <= 2)
+				{
+					reverse(fractPart.begin(), fractPart.end());
+					matrix[i][j] = multiplier * std::atof((intPart + "." + fractPart).c_str());
+				}
 				if (ch == '\n' || input.eof())
 				{
 					if (j != 2)
 					{
-						std::cout << "Invalid number of elements" << '\n';
+						std::cout << "Invalid matrix" << '\n';
 						return false;
 					}
 					j = 0;
@@ -127,11 +130,12 @@ bool ReadMatrixFromFile(std::istream& input, Matrix3x3& matrix)
 				{
 					j += 1;
 				}
+
+				intPart = "";
+				fractPart = "";
+				findDot = false;
+				multiplier = 1;
 			}
-			intPart = "";
-			fractPart = "";
-			findDot = false;
-			multiplier = 1;
 			continue;
 		}
 		if (ch == '-' && intPart == "" && multiplier == 1)
@@ -162,7 +166,7 @@ bool ReadMatrixFromFile(std::istream& input, Matrix3x3& matrix)
 	}
 	if (i != 3)
 	{
-		std::cout << "Invalid number of elements" << '\n';
+		std::cout << "Invalid matrix" << '\n';
 		return false;
 	}
 	return true;
@@ -184,17 +188,12 @@ bool InvertMatrixFromFile(const std::string& inputFileName)
 		return false;
 	}
 
-	PrintMatrix(matrix);
-
 	Matrix3x3 resultMatrix;
 	if (GetInvertMatrix(matrix, resultMatrix))
 	{
-		std::cout << "result matrix: " << '\n';
 		PrintMatrix(resultMatrix);
-		return true;
 	}
-
-	return false;
+	return true;
 }
 
 int main(int argc, char* argv[])

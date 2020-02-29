@@ -26,5 +26,43 @@
     <Text Include="test-data\input.txt">
       <Filter>test-data</Filter>
     </Text>
+    <Text Include="test-data\input1.txt">
+      <Filter>test-data</Filter>
+    </Text>
+    <Text Include="test-data\output1.txt">
+      <Filter>test-data</Filter>
+    </Text>
+    <Text Include="test-data\input2.txt">
+      <Filter>test-data</Filter>
+    </Text>
+    <Text Include="test-data\output2.txt">
+      <Filter>test-data</Filter>
+    </Text>
+    <Text Include="test-data\input3.txt">
+      <Filter>test-data</Filter>
+    </Text>
+    <Text Include="test-data\output3.txt">
+      <Filter>test-data</Filter>
+    </Text>
+    <Text Include="test-data\input4.txt">
+      <Filter>test-data</Filter>
+    </Text>
+    <Text Include="test-data\input5.txt">
+      <Filter>test-data</Filter>
+    </Text>
+    <Text Include="test-data\input6.txt">
+      <Filter>test-data</Filter>
+    </Text>
+    <Text Include="test-data\input7.txt">
+      <Filter>test-data</Filter>
+    </Text>
+    <Text Include="test-data\input8.txt">
+      <Filter>test-data</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="tests.bat">
+      <Filter>Исходные файлы</Filter>
+    </None>
   </ItemGroup>
 </Project>
