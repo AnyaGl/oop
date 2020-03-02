@@ -152,15 +152,11 @@ int StringToInt(const std::string& str, int radix, bool& wasError)
 	{
 		int digit = GetDigit(str[i], radix, wasError);
 
-		if (negativeNum && !wasError)
+		if (negativeNum)
 		{
-			if (!SafeMult(resultNumber, radix, resultNumber) || !SafeAdd(resultNumber, -digit, resultNumber))
-			{
-				wasError = true;
-				std::cout << "Overflow\n";
-			}
+			digit = -digit;
 		}
-		else if (!wasError)
+		if (!wasError)
 		{
 			if (!SafeMult(resultNumber, radix, resultNumber) || !SafeAdd(resultNumber, digit, resultNumber))
 			{
