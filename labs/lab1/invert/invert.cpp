@@ -172,7 +172,7 @@ bool ReadMatrixFromFile(std::istream& input, Matrix3x3& matrix)
 	return true;
 }
 
-bool InvertMatrixFromFile(const std::string& inputFileName)
+bool InvertMatrixFromFile(const std::string& inputFileName, Matrix3x3& resultMatrix)
 {
 	std::ifstream input;
 	input.open(inputFileName);
@@ -188,10 +188,9 @@ bool InvertMatrixFromFile(const std::string& inputFileName)
 		return false;
 	}
 
-	Matrix3x3 resultMatrix;
-	if (GetInvertMatrix(matrix, resultMatrix))
+	if (!GetInvertMatrix(matrix, resultMatrix))
 	{
-		PrintMatrix(resultMatrix);
+		return false;
 	}
 	return true;
 }
@@ -203,9 +202,11 @@ int main(int argc, char* argv[])
 	{
 		return 1;
 	}
-	if (!InvertMatrixFromFile(args->inputFileName))
+	Matrix3x3 resultMatrix;
+	if (!InvertMatrixFromFile(args->inputFileName, resultMatrix))
 	{
 		return 1;
 	}
+	PrintMatrix(resultMatrix);
 	return 0;
 }

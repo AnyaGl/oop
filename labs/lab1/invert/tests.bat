@@ -18,8 +18,7 @@
  echo Test 2 passed
 
  REM Singular matrix
- %Program% test-data\input3.txt > "%TEMP%\output.txt" || goto err
- fc test-data\output3.txt "%TEMP%\output.txt" > nul || goto err
+ %Program% test-data\input3.txt > "%TEMP%\output.txt" && goto err
  echo Test 3 passed
 
  REM Input file contains invalid character (dot)
