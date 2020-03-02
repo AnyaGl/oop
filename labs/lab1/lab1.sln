@@ -9,6 +9,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "radix", "radix\radix.vcxpro
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "invert", "invert\invert.vcxproj", "{DED326C7-4420-4C76-A9E1-48296D9704EA}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "rle", "rle\rle.vcxproj", "{1523629D-0867-44B0-A3A7-8F019A4732EF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -41,6 +43,14 @@ Global
 		{DED326C7-4420-4C76-A9E1-48296D9704EA}.Release|x64.Build.0 = Release|x64
 		{DED326C7-4420-4C76-A9E1-48296D9704EA}.Release|x86.ActiveCfg = Release|Win32
 		{DED326C7-4420-4C76-A9E1-48296D9704EA}.Release|x86.Build.0 = Release|Win32
+		{1523629D-0867-44B0-A3A7-8F019A4732EF}.Debug|x64.ActiveCfg = Debug|x64
+		{1523629D-0867-44B0-A3A7-8F019A4732EF}.Debug|x64.Build.0 = Debug|x64
+		{1523629D-0867-44B0-A3A7-8F019A4732EF}.Debug|x86.ActiveCfg = Debug|Win32
+		{1523629D-0867-44B0-A3A7-8F019A4732EF}.Debug|x86.Build.0 = Debug|Win32
+		{1523629D-0867-44B0-A3A7-8F019A4732EF}.Release|x64.ActiveCfg = Release|x64
+		{1523629D-0867-44B0-A3A7-8F019A4732EF}.Release|x64.Build.0 = Release|x64
+		{1523629D-0867-44B0-A3A7-8F019A4732EF}.Release|x86.ActiveCfg = Release|Win32
+		{1523629D-0867-44B0-A3A7-8F019A4732EF}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
