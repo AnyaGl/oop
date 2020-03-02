@@ -2,8 +2,6 @@
 #include <iostream>
 #include <optional>
 
-typedef double Matrix3x3[3][3];
-
 struct Args
 {
 	std::string type;
@@ -28,16 +26,67 @@ std::optional<Args> ParseArgs(int argc, char* argv[])
 	return args;
 }
 
-bool PackFile(const std::string& inputFileName)
+bool PackFile(const std::string& inputFileName, std::string& outputFileName)
 {
 	std::ifstream input;
 	input.open(inputFileName, std::ios::binary);
 	if (!input.is_open())
 	{
 		std::cout << inputFileName << " could not be opened\n";
-		return true;
+		return false;
+	}
+
+	std::ofstream output;
+	output.open(outputFileName, std::ios::binary);
+	if (!output.is_open())
+	{
+		std::cout << outputFileName << " could not be opened\n";
+		return false;
+	}
+
+	char ch1, ch2;
+	int counter = 1;
+
+	if (!input.eof())
+	{
+		input.get(ch1);
+	}
+	while (!input.eof())
+	{
+		input.get(ch2);
+		while (ch1 == ch2 && counter < 255 && !input.eof())
+		{
+			counter += 1;
+			input.get(ch2);
+		}
+		output.write((char*)&counter, sizeof(char));
+		output.write((char*)&ch1, sizeof(char));
+		std::cout << counter << ch1;
+		counter = 1;
+		ch1 = ch2;
+	}
+	return true;
+}
+
+bool UnpackFile(const std::string& inputFileName, std::string& outputFileName)
+{
+	std::ifstream input;
+	input.open(inputFileName, std::ios::binary);
+	if (!input.is_open())
+	{
+		std::cout << inputFileName << " could not be opened\n";
+		return false;
+	}
+
+	std::ofstream output;
+	output.open(outputFileName, std::ios::binary);
+	if (!output.is_open())
+	{
+		std::cout << outputFileName << " could not be opened\n";
+		return false;
 	}
 }
+
 
 int main(int argc, char* argv[])
 {
@@ -46,8 +95,14 @@ int main(int argc, char* argv[])
 	{
 		return 1;
 	}
-
-	PackFile(args->inputFileName);
+	if (args->type == "pack")
+	{
+		PackFile(args->inputFileName, args->outputFileName);
+	}
+	else
+	{
+		UnpackFile(args->inputFileName, args->outputFileName);
+	}
 
 	return 0;
 }
