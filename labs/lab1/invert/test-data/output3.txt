@@ -1,1 +1,3 @@
-Determinant is 0. The inverse matrix does not exist.
+1.000 -0.000 0.000 
+-0.000 1.000 -0.000 
+0.000 -0.000 1.000 

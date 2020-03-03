@@ -1,12 +1,15 @@
 ﻿#include <fstream>
+#include <iomanip>
 #include <iostream>
 #include <optional>
+#include <sstream>
+#include <string>
 
 typedef double Matrix3x3[3][3];
 
 struct Args
 {
-	std::string inputFileName;
+	std::string matrixFileName;
 };
 
 std::optional<Args> ParseArgs(int argc, char* argv[])
@@ -19,7 +22,7 @@ std::optional<Args> ParseArgs(int argc, char* argv[])
 		return std::nullopt;
 	}
 	Args args;
-	args.inputFileName = argv[1];
+	args.matrixFileName = argv[1];
 
 	return args;
 }
@@ -30,13 +33,13 @@ void PrintMatrix(const Matrix3x3& matrix)
 	{
 		for (int j = 0; j < 3; j++)
 		{
-			printf("%.3f ", matrix[i][j]);
+			std::cout << std::fixed << std::setprecision(3) << matrix[i][j] << " ";
 		}
-		printf("\n");
+		std::cout << '\n';
 	}
 }
 
-double CountDeterminant(const Matrix3x3& matrix)
+double GetDeterminant(const Matrix3x3& matrix)
 {
 	double det = matrix[0][0] * matrix[1][1] * matrix[2][2]
 		+ matrix[0][1] * matrix[1][2] * matrix[2][0]
@@ -47,165 +50,106 @@ double CountDeterminant(const Matrix3x3& matrix)
 	return det;
 }
 
-void GetUnionMatrix(const Matrix3x3& matrix, Matrix3x3& unionMatrix)
+void GetAdjugateMatrix(const Matrix3x3& matrix, Matrix3x3& adjugateMatrix)
 {
-	unionMatrix[0][0] = matrix[1][1] * matrix[2][2] - matrix[2][1] * matrix[1][2];
-	unionMatrix[1][0] = -(matrix[1][0] * matrix[2][2] - matrix[2][0] * matrix[1][2]);
-	unionMatrix[2][0] = matrix[1][0] * matrix[2][1] - matrix[2][0] * matrix[1][1];
+	adjugateMatrix[0][0] = matrix[1][1] * matrix[2][2] - matrix[2][1] * matrix[1][2];
+	adjugateMatrix[1][0] = -(matrix[1][0] * matrix[2][2] - matrix[2][0] * matrix[1][2]);
+	adjugateMatrix[2][0] = matrix[1][0] * matrix[2][1] - matrix[2][0] * matrix[1][1];
 
-	unionMatrix[0][1] = -(matrix[0][1] * matrix[2][2] - matrix[2][1] * matrix[0][2]);
-	unionMatrix[1][1] = matrix[0][0] * matrix[2][2] - matrix[2][0] * matrix[0][2];
-	unionMatrix[2][1] = -(matrix[0][0] * matrix[2][1] - matrix[2][0] * matrix[0][1]);
+	adjugateMatrix[0][1] = -(matrix[0][1] * matrix[2][2] - matrix[2][1] * matrix[0][2]);
+	adjugateMatrix[1][1] = matrix[0][0] * matrix[2][2] - matrix[2][0] * matrix[0][2];
+	adjugateMatrix[2][1] = -(matrix[0][0] * matrix[2][1] - matrix[2][0] * matrix[0][1]);
 
-	unionMatrix[0][2] = matrix[0][1] * matrix[1][2] - matrix[1][1] * matrix[0][2];
-	unionMatrix[1][2] = -(matrix[0][0] * matrix[1][2] - matrix[1][0] * matrix[0][2]);
-	unionMatrix[2][2] = matrix[0][0] * matrix[1][1] - matrix[1][0] * matrix[0][1];
+	adjugateMatrix[0][2] = matrix[0][1] * matrix[1][2] - matrix[1][1] * matrix[0][2];
+	adjugateMatrix[1][2] = -(matrix[0][0] * matrix[1][2] - matrix[1][0] * matrix[0][2]);
+	adjugateMatrix[2][2] = matrix[0][0] * matrix[1][1] - matrix[1][0] * matrix[0][1];
+}
 
+bool ReadMatrixFromFile(const std::string& matrixFileName, Matrix3x3& matrix)
+{
+	std::ifstream input;
+	input.open(matrixFileName);
+	if (!input.is_open())
+	{
+		std::cout << matrixFileName << " could not be open for reading\n";
+		return false;
+	}
+	int i = 0;
+	int j = 0;
+	double number;
+	std::string str;
+
+	while (!input.eof() && i < 3)
+	{
+		j = 0;
+		std::getline(input, str);
+		std::stringstream line(str);
+		while (line >> number && j < 3)
+		{
+			matrix[i][j] = number;
+			j += 1;
+		}
+		if (j != 3)
+		{
+			break;
+		}
+		i += 1;
+	}
+
+	if (i != 3)
+	{
+		std::cout << "Invalid matrix" << '\n';
+		return false;
+	}
+
+	return true;
+}
+
+void MultiplyMatrixByNumber(Matrix3x3& resultMatrix, double num)
+{
 	for (int i = 0; i < 3; i++)
 	{
 		for (int j = 0; j < 3; j++)
 		{
-			double eps = 0.0005;
-			if (abs(unionMatrix[i][j]) < eps)
-			{
-				unionMatrix[i][j] = 0;
-			}
+			resultMatrix[i][j] *= num;
 		}
 	}
 }
 
-bool GetInvertMatrix(const Matrix3x3& matrix, Matrix3x3& resultMatrix)
+bool InvertMatrix(const Matrix3x3& matrix, Matrix3x3& resultMatrix)
 {
-	double det = CountDeterminant(matrix);
+	double det = GetDeterminant(matrix);
 	if (det == 0)
 	{
 		std::cout << "Determinant is 0. The inverse matrix does not exist.\n";
 		return false;
 	}
 
-	GetUnionMatrix(matrix, resultMatrix);
+	GetAdjugateMatrix(matrix, resultMatrix);
 
-	for (int i = 0; i < 3; i++)
-	{
-		for (int j = 0; j < 3; j++)
-		{
-			resultMatrix[i][j] /= det;
-		}
-	}
-	return true;
-}
+	MultiplyMatrixByNumber(resultMatrix, 1 / det);
 
-bool ReadMatrixFromFile(std::istream& input, Matrix3x3& matrix)
-{
-	char ch;
-	int i = 0;
-	int j = 0;
-	int multiplier = 1;
-	bool findDot = false;
-	std::string intPart, fractPart;
-
-	while (!input.eof() && i < 3)
-	{
-		input.get(ch);
-		if ((ch == ' ' || ch == '\t' || ch == '\n' || input.eof()) && (!findDot || fractPart != ""))
-		{
-			if (intPart != "")
-			{
-				if (j <= 2)
-				{
-					reverse(fractPart.begin(), fractPart.end());
-					matrix[i][j] = multiplier * std::atof((intPart + "." + fractPart).c_str());
-				}
-				if (ch == '\n' || input.eof())
-				{
-					if (j != 2)
-					{
-						std::cout << "Invalid matrix" << '\n';
-						return false;
-					}
-					j = 0;
-					i += 1;
-				}
-				else
-				{
-					j += 1;
-				}
-
-				intPart = "";
-				fractPart = "";
-				findDot = false;
-				multiplier = 1;
-			}
-			continue;
-		}
-		if (ch == '-' && intPart == "" && multiplier == 1)
-		{
-			multiplier = -1;
-			continue;
-		}
-		if (ch == '.' && !findDot && intPart != "")
-		{
-			findDot = true;
-			continue;
-		}
-		if (isdigit(ch))
-		{
-			if (findDot)
-			{
-				fractPart += ch;
-			}
-			else
-			{
-				intPart += ch;
-			}
-			continue;
-		}
-
-		std::cout << "Invalid character: '" << ch << "'\n";
-		return false;
-	}
-	if (i != 3)
-	{
-		std::cout << "Invalid matrix" << '\n';
-		return false;
-	}
-	return true;
-}
-
-bool InvertMatrixFromFile(const std::string& inputFileName, Matrix3x3& resultMatrix)
-{
-	std::ifstream input;
-	input.open(inputFileName);
-	if (!input.is_open())
-	{
-		std::cout << inputFileName << " could not be open for reading\n";
-		return false;
-	}
-
-	Matrix3x3 matrix;
-	if (!ReadMatrixFromFile(input, matrix))
-	{
-		return false;
-	}
-
-	if (!GetInvertMatrix(matrix, resultMatrix))
-	{
-		return false;
-	}
 	return true;
 }
 
 int main(int argc, char* argv[])
 {
+
 	auto args = ParseArgs(argc, argv);
 	if (!args)
 	{
 		return 1;
 	}
-	Matrix3x3 resultMatrix;
-	if (!InvertMatrixFromFile(args->inputFileName, resultMatrix))
+
+	Matrix3x3 matrix;
+	if (!ReadMatrixFromFile(args->matrixFileName, matrix))
 	{
 		return 1;
+	}
+	Matrix3x3 resultMatrix;
+	if (!InvertMatrix(matrix, resultMatrix))
+	{
+		return 0;
 	}
 	PrintMatrix(resultMatrix);
 	return 0;

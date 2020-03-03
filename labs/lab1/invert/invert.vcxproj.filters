@@ -56,9 +56,6 @@
     <Text Include="test-data\input7.txt">
       <Filter>test-data</Filter>
     </Text>
-    <Text Include="test-data\input8.txt">
-      <Filter>test-data</Filter>
-    </Text>
   </ItemGroup>
   <ItemGroup>
     <None Include="tests.bat">

@@ -177,7 +177,6 @@
     <Text Include="test-data\output1.txt" />
     <Text Include="test-data\output2.txt" />
     <Text Include="test-data\output3.txt" />
-    <Text Include="test-data\input8.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="tests.bat" />
