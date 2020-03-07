@@ -4,6 +4,7 @@
 #include <iostream>
 #include <iterator>
 #include <vector>
+#include "vector.h"
 
 void ProcessVector(std::vector<double>& numbers)
 {
