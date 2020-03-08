@@ -5,13 +5,12 @@
 #include <vector>
 #include "ProcessVector.h"
 
-
 int main()
 {
 	std::vector<double> numbers(std::istream_iterator<double>(std::cin), (std::istream_iterator<double>()));
 
 	ProcessVector(numbers);
-	
+
 	std::sort(numbers.begin(), numbers.end());
 
 	std::cout << std::fixed << std::setprecision(3);

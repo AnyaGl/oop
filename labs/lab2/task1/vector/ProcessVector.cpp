@@ -1,5 +1,5 @@
-#include <vector>
 #include "ProcessVector.h"
+#include <vector>
 
 void ProcessVector(std::vector<double>& numbers)
 {
