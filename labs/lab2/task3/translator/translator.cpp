@@ -1,13 +1,35 @@
 ﻿#include "vocabulary.h"
 
-void RunTranslator(Vocabulary& vocabulary, bool vocabularyChanged)
+void AskAndSaveChanges(const std::string& vocabularyFileName, Vocabulary& vocabulary)
 {
-	vocabularyChanged = false;
+	std::string str;
+	std::cout << "The vocabulary has been modified. Enter Y or y to save before exiting\n";
+	getline(std::cin, str);
+	if (str == "Y" || str == "y")
+	{
+		if (SaveVocabulary(vocabularyFileName, vocabulary))
+		{
+			std::cout << "Changes saved to " << vocabularyFileName << ". Goodbye\n";
+		}
+	}
+	else
+	{
+		std::cout << "Changes not saved. Goodbye\n";
+	}
+}
+
+void RunTranslator(const std::string& vocabularyFileName, Vocabulary& vocabulary)
+{
+	bool vocabularyChanged = false;
 	std::string word;
 	while (getline(std::cin, word))
 	{
 		if (word == "...")
 		{
+			if (vocabularyChanged)
+			{
+				AskAndSaveChanges(vocabularyFileName, vocabulary);
+			}
 			break;
 		}
 		if (!PrintTranslation(std::cout, word, vocabulary))
@@ -29,24 +51,6 @@ void RunTranslator(Vocabulary& vocabulary, bool vocabularyChanged)
 	}
 }
 
-void AskAndSaveChanges(const std::string& vocabularyFileName, Vocabulary& vocabulary)
-{
-	std::string str;
-	std::cout << "The vocabulary has been modified. Enter Y or y to save before exiting\n";
-	getline(std::cin, str);
-	if (str == "Y" || str == "y")
-	{
-		if (SaveVocabulary(vocabularyFileName, vocabulary))
-		{
-			std::cout << "Changes saved to " << vocabularyFileName << ". Goodbye\n";
-		}
-	}
-	else
-	{
-		std::cout << "Changes not saved. Goodbye\n";
-	}
-}
-
 int main(int argc, char* argv[])
 {
 	std::string vocabularyFileName = "vocabulary.txt";
@@ -60,13 +64,7 @@ int main(int argc, char* argv[])
 		}
 	}
 
-	bool vocabularyChanged = false;
-	RunTranslator(vocabulary, vocabularyChanged);
-
-	if (vocabularyChanged)
-	{
-		AskAndSaveChanges(vocabularyFileName, vocabulary);
-	}
+	RunTranslator(vocabularyFileName, vocabulary);
 
 	return 0;
 }

@@ -106,7 +106,7 @@ void AddWord(std::string word, std::string translation, Vocabulary& vocabulary)
 	vocabulary[word].push_back(translation);
 }
 
-bool SaveVocabulary(const std::string& vocabularyFileName, const Vocabulary& vocabulary)
+bool SaveVocabulary(const std::string& vocabularyFileName, Vocabulary& vocabulary)
 {
 	std::ofstream output;
 	output.open(vocabularyFileName);
