@@ -38,7 +38,7 @@ std::optional<Args> ParseArgs(int argc, char* argv[])
 	{
 		std::cout
 			<< "Invalid mode\n"
-			<< "Use: rle.exe pack/unpack <input file> <output file>\n";
+			<< "Use: rle.exe pack <input file> <output file>\n or  rle.exe unpack <input file> <output file>\n";
 		return std::nullopt;
 	}
 
@@ -66,7 +66,6 @@ void RleCompression(std::istream& input, std::ostream& output)
 			input.get(ch2);
 		}
 		output << (char)counter << ch1;
-		std::cout << counter << ch1;
 
 		counter = 1;
 		ch1 = ch2;
