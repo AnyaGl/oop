@@ -1,39 +1,5 @@
 #include "vocabulary.h"
 #include <algorithm>
-#include <iterator>
-#include <sstream>
-
-bool InitVocabulary(const std::string& vocabularyFileName, Vocabulary& vocabulary)
-{
-	std::ifstream vocabularyFile;
-	vocabularyFile.open(vocabularyFileName);
-	if (!vocabularyFile.is_open())
-	{
-		std::cout << "File could not be opened\n";
-		return false;
-	}
-	std::string str;
-	while (getline(vocabularyFile, str))
-	{
-		std::string enWord, ruWord;
-
-		size_t startWord = str.find('[');
-		size_t endWord = str.find(']');
-		enWord = str.substr(startWord + 1, endWord - startWord - 1);
-		str.erase(startWord, endWord - startWord + 2);
-
-		endWord = str.find(',');
-		while (endWord != std::string::npos)
-		{
-			ruWord = str.substr(0, endWord);
-			str.erase(0, endWord + 2);
-			vocabulary[enWord].push_back(ruWord);
-			endWord = str.find(',');
-		}
-		vocabulary[enWord].push_back(str);
-	}
-	return true;
-}
 
 bool IsRusWord(const std::string& word)
 {
@@ -47,53 +13,46 @@ bool IsRusWord(const std::string& word)
 	return true;
 }
 
-bool PrintRusTranslation(std::ostream& output, std::string word, Vocabulary& vocabulary)
+std::optional<ListOfWords> GetRusTranslation(std::string word, Vocabulary& vocabulary)
 {
 	if (vocabulary.find(word) == vocabulary.end())
 	{
-		return false;
+		return std::nullopt;
 	}
 	ListOfWords translation = vocabulary[word];
-	for (auto it = translation.begin(); it != translation.end(); it++)
-	{
-		output << *it;
-		if (it != translation.end() - 1)
-		{
-			output << ", ";
-		}
-	}
-	output << std::endl;
-	return true;
+	return translation;
 }
 
-bool PrintEnTranslation(std::ostream& output, std::string word, Vocabulary& vocabulary)
+std::optional<ListOfWords> GetEnTranslation(std::string word, Vocabulary& vocabulary)
 {
-
+	ListOfWords translation;
 	for (auto it = vocabulary.begin(); it != vocabulary.end(); it++)
 	{
 		for (auto it1 = it->second.begin(); it1 != it->second.end(); it1++)
 		{
 			if (*it1 == word)
 			{
-				output << it->first << std::endl;
-				return true;
+				translation.push_back(it->first);
+				return translation;
 			}
 		}
 	}
-	return false;
+	return std::nullopt;
 }
 
-bool PrintTranslation(std::ostream& output, std::string word, Vocabulary& vocabulary)
+std::optional<ListOfWords> TranslateWord(std::string word, Vocabulary& vocabulary)
 {
 	std::transform(word.begin(), word.end(), word.begin(), tolower);
-	if (!PrintRusTranslation(output, word, vocabulary))
+	std::optional<ListOfWords> translation = GetRusTranslation(word, vocabulary);
+	if (!translation)
 	{
-		if (!PrintEnTranslation(output, word, vocabulary))
+		translation = GetEnTranslation(word, vocabulary);
+		if (!translation)
 		{
-			return false;
+			return std::nullopt;
 		}
 	}
-	return true;
+	return translation;
 }
 
 void AddWord(std::string word, std::string translation, Vocabulary& vocabulary)
@@ -104,29 +63,4 @@ void AddWord(std::string word, std::string translation, Vocabulary& vocabulary)
 	}
 	std::transform(word.begin(), word.end(), word.begin(), tolower);
 	vocabulary[word].push_back(translation);
-}
-
-bool SaveVocabulary(const std::string& vocabularyFileName, Vocabulary& vocabulary)
-{
-	std::ofstream output;
-	output.open(vocabularyFileName);
-	if (!output.is_open())
-	{
-		std::cout << "File to save vocabulary could not be opened\n";
-		return false;
-	}
-	for (auto it = vocabulary.begin(); it != vocabulary.end(); it++)
-	{
-		output << "[" << it->first << "] ";
-		for (auto it1 = it->second.begin(); it1 != it->second.end(); it1++)
-		{
-			output << *it1;
-			if (it1 != it->second.end() - 1)
-			{
-				output << ", ";
-			}
-		}
-		output << std::endl;
-	}
-	return true;
 }
