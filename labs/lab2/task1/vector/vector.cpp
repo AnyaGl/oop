@@ -2,7 +2,6 @@
 #include <iomanip>
 #include <iostream>
 #include <iterator>
-#include <vector>
 #include "ProcessVector.h"
 
 int main()
