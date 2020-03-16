@@ -2,7 +2,7 @@
 #include "catch2/catch.hpp"
 #include "../vector/ProcessVector.h"
 
-TEST_CASE("Сheck ProcessVector(): empty vector")
+TEST_CASE("Empty vector must be empty")
 {
 	std::vector<double> numbers;
 	ProcessVector(numbers);
@@ -11,20 +11,17 @@ TEST_CASE("Сheck ProcessVector(): empty vector")
 	CHECK(numbers == required);
 }
 
-TEST_CASE("Сheck ProcessVector(): int numbers (with zero)")
+TEST_CASE("Elements on even positions must be multiplied by 2, items on odd position are decreased by sum of non-negative elements")
 {
 	std::vector<double> numbers = { 2, 0, -4 };
 	ProcessVector(numbers);
 	std::vector<double> required = { 4, -2, -8 };
 
 	CHECK(numbers == required);
-}
 
-TEST_CASE("Сheck ProcessVector(): double numbers")
-{
-	std::vector<double> numbers = { 1.2, -2.4, 1, -4, -2.55 };
+	numbers = { 1.2, -2.4, 1, -4, -2.55 };
 	ProcessVector(numbers);
-	std::vector<double> required = { 2.4, -4.6, 2, -6.2, -5.1 };
+	required = { 2.4, -4.6, 2, -6.2, -5.1 };
 
 	CHECK(numbers == required);
 }
