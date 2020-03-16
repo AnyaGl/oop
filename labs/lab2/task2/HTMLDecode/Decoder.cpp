@@ -1,25 +1,27 @@
 #include "Decoder.h"
+#include <iostream>
 #include <optional>
+#include <vector>
 
-std::optional<char> GetDecodedHtmlEntity(std::string& str)
+std::optional<char> GetDecodedHtmlEntity(const std::string& str, ptrdiff_t start, long long len)
 {
-	if (str == "&quot;")
+	if (str.compare(start, len, "&quot;") == 0)
 	{
 		return '"';
 	}
-	if (str == "&apos;")
+	if (str.compare(start, len, "&apos;") == 0)
 	{
 		return '\'';
 	}
-	if (str == "&lt;")
+	if (str.compare(start, len, "&lt;") == 0)
 	{
 		return '<';
 	}
-	if (str == "&gt;")
+	if (str.compare(start, len, "&gt;") == 0)
 	{
 		return '>';
 	}
-	if (str == "&amp;")
+	if (str.compare(start, len, "&amp;") == 0)
 	{
 		return '&';
 	}
@@ -36,35 +38,22 @@ std::string HtmlDecode(std::string const& html)
 		if (*it == '&')
 		{
 			auto endHtmlEntity = std::find(it, html.end(), ';');
-			int startHtmlEntity = it - html.begin();
+			auto startHtmlEntity = it - html.begin();
 
-			if (endHtmlEntity != html.end())
+			if (endHtmlEntity != html.end() && endHtmlEntity - it < 7)
 			{
-				int lengthHtmlEntity = endHtmlEntity - it + 1;
-				std::string htmlEntity = html.substr(startHtmlEntity, lengthHtmlEntity);
-				std::optional<char> decodedSymbol = GetDecodedHtmlEntity(htmlEntity);
-				if (!decodedSymbol)
-				{
-					decodingHtml += *it;
-					it += 1;
-				}
-				else
+				auto lengthHtmlEntity = endHtmlEntity - it + 1;
+				std::optional<char> decodedSymbol = GetDecodedHtmlEntity(html, startHtmlEntity, lengthHtmlEntity);
+				if (decodedSymbol)
 				{
 					decodingHtml += decodedSymbol.value();
 					it = endHtmlEntity + 1;
+					continue;
 				}
 			}
-			else
-			{
-				decodingHtml += html.substr(startHtmlEntity, html.end() - it);
-				break;
-			}
 		}
-		else
-		{
-			decodingHtml += *it;
-			it += 1;
-		}
+		decodingHtml += *it;
+		it += 1;
 	}
 
 	return decodingHtml;
