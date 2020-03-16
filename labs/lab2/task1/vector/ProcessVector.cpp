@@ -2,12 +2,12 @@
 
 void ProcessVector(std::vector<double>& numbers)
 {
-	double sumNegativeNum = 0;
+	double sumPosNum = 0;
 	for (double& number : numbers)
 	{
-		if (number < 0)
+		if (number >= 0)
 		{
-			sumNegativeNum += number;
+			sumPosNum += number;
 		}
 	}
 
@@ -19,7 +19,7 @@ void ProcessVector(std::vector<double>& numbers)
 		}
 		else
 		{
-			numbers[i] -= sumNegativeNum;
+			numbers[i] -= sumPosNum;
 		}
 	}
 }

@@ -10,15 +10,15 @@ TEST_CASE("Сheck the result of ProcessVector()")
 
 	CHECK(numbers == required);
 
-	numbers = { 2, 1, 4 };
+	numbers = { 2, 0, 4 };
 	ProcessVector(numbers);
-	required = { 4, 1, 8 };
+	required = { 4, -6, 8 };
 
 	CHECK(numbers == required);
 
-	numbers = { 1.2333, -2.45, -1, -4, -2.55 };
+	numbers = { 1.2, -2.4, 1, -4, -2.55 };
 	ProcessVector(numbers);
-	required = { 2.4666, 7.55, -2, 6, -5.1 };
+	required = { 2.4, -4.6, 2, -6.2, -5.1 };
 
 	CHECK(numbers == required);
 }
