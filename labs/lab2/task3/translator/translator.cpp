@@ -81,13 +81,19 @@ bool PrintTranslation(std::ostream& output, std::string word, Vocabulary& vocabu
 	return true;
 }
 
-void AskAndSaveChanges(const std::string& vocabularyFileName, Vocabulary& vocabulary)
+void AskAndSaveChanges(std::string& vocabularyFileName, Vocabulary& vocabulary)
 {
+	
 	std::string str;
 	std::cout << "The vocabulary has been modified. Enter Y or y to save before exiting\n";
 	getline(std::cin, str);
 	if (str == "Y" || str == "y")
 	{
+		if (vocabularyFileName.empty())
+		{
+			std::cout << "Enter file name to save\n";
+			getline(std::cin, vocabularyFileName);
+		}
 		if (SaveVocabulary(vocabularyFileName, vocabulary))
 		{
 			std::cout << "Changes saved to " << vocabularyFileName << ". Goodbye\n";
@@ -99,7 +105,7 @@ void AskAndSaveChanges(const std::string& vocabularyFileName, Vocabulary& vocabu
 	}
 }
 
-void RunTranslator(const std::string& vocabularyFileName, Vocabulary& vocabulary)
+void RunTranslator(std::string& vocabularyFileName, Vocabulary& vocabulary)
 {
 	bool vocabularyChanged = false;
 	std::string word;
@@ -134,14 +140,14 @@ void RunTranslator(const std::string& vocabularyFileName, Vocabulary& vocabulary
 
 int main(int argc, char* argv[])
 {
-	std::string vocabularyFileName = "vocabulary.txt";
+	std::string vocabularyFileName;
 	Vocabulary vocabulary;
 	if (argc == 2)
 	{
 		vocabularyFileName = argv[1];
 		if (!InitVocabulary(vocabularyFileName, vocabulary))
 		{
-			std::cout << "Vocabulary is empty\n";
+			return 1;
 		}
 	}
 
