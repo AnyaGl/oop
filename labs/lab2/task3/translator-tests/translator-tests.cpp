@@ -2,7 +2,7 @@
 #include "../translator/vocabulary.h"
 #include "catch2/catch.hpp"
 
-TEST_CASE("Сheck the result of TranslateWord()")
+TEST_CASE("Must be returned translation of the word")
 {
 	Vocabulary vocabulary = {
 		{ "cat", { "кот", "кошка" } },
@@ -18,7 +18,7 @@ TEST_CASE("Сheck the result of TranslateWord()")
 	CHECK(TranslateWord("meat", vocabulary) == std::nullopt);
 }
 
-TEST_CASE("Сheck the result of AddWord()")
+TEST_CASE("Translations of words must be added to the vocabulary")
 {
 	Vocabulary vocabulary = {
 		{ "cat", { "кот" } },
