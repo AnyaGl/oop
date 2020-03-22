@@ -4,7 +4,7 @@
 #include <optional>
 #include <regex>
 
-std::map<Protocol, int> defaultPort = {
+const std::map<Protocol, int> DEFAULT_PORT = {
 	{ Protocol::HTTP, 80 },
 	{ Protocol::HTTPS, 443 },
 	{ Protocol::FTP, 21 },
@@ -32,7 +32,7 @@ std::optional<int> GetPort(std::string port, Protocol const& protocol)
 {
 	if (port.empty())
 	{
-		return defaultPort[protocol];
+		return DEFAULT_PORT.find(protocol)->second;
 	}
 
 	int resultPort;
@@ -48,7 +48,7 @@ std::optional<int> GetPort(std::string port, Protocol const& protocol)
 bool ParseURL(std::string const& url, Protocol& protocol, int& port, std::string& host, std::string& document)
 {
 	std::smatch matches;
-	std::regex rx("^(.*)://([-.[:alnum:]]+)(:([[:digit:]]+))?(/(.*))?$");
+	std::regex rx("^([[:alpha:]]+)://([-.[:alnum:]]+)(:([[:digit:]]+))?(/(.*))?$");
 	std::regex_search(url, matches, rx);
 
 	if (matches.empty())
