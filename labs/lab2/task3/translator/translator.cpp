@@ -3,8 +3,25 @@
 #include <iostream>
 #include <string>
 
+ListOfWords Split(std::string str, const std::string& delimiter)
+{
+	ListOfWords splitStrings;
+	std::string substring;
+	size_t endFind = str.find(delimiter);
+	while (endFind != std::string::npos)
+	{
+		substring = str.substr(0, endFind);
+		str.erase(0, endFind + delimiter.length());
+		splitStrings.push_back(substring);
+		endFind = str.find(delimiter);
+	}
+	splitStrings.push_back(str);
+	return splitStrings;
+}
+
 bool InitVocabulary(const std::string& vocabularyFileName, Vocabulary& vocabulary)
 {
+	vocabulary = {};
 	std::ifstream vocabularyFile;
 	vocabularyFile.open(vocabularyFileName);
 	if (!vocabularyFile.is_open())
@@ -12,30 +29,21 @@ bool InitVocabulary(const std::string& vocabularyFileName, Vocabulary& vocabular
 		std::cout << "File could not be opened\n";
 		return false;
 	}
+
 	std::string str;
 	while (getline(vocabularyFile, str))
 	{
-		std::string enWord, ruWord;
-
 		size_t startWord = str.find('[');
-		size_t endWord = str.find(']');
-		enWord = str.substr(startWord + 1, endWord - startWord - 1);
-		str.erase(startWord, endWord - startWord + 2);
+		size_t lenWord = str.find(']') - startWord - 1;
+		std::string enWord = str.substr(startWord + 1, lenWord);
+		str.erase(startWord, lenWord + 3);
 
-		endWord = str.find(',');
-		while (endWord != std::string::npos)
-		{
-			ruWord = str.substr(0, endWord);
-			str.erase(0, endWord + 2);
-			vocabulary[enWord].push_back(ruWord);
-			endWord = str.find(',');
-		}
-		vocabulary[enWord].push_back(str);
+		vocabulary[enWord] = Split(str, ", ");
 	}
 	return true;
 }
 
-bool SaveVocabulary(const std::string& vocabularyFileName, Vocabulary& vocabulary)
+bool SaveVocabulary(const std::string& vocabularyFileName, const Vocabulary& vocabulary)
 {
 	std::ofstream output;
 	output.open(vocabularyFileName);
@@ -44,13 +52,13 @@ bool SaveVocabulary(const std::string& vocabularyFileName, Vocabulary& vocabular
 		std::cout << "File to save vocabulary could not be opened\n";
 		return false;
 	}
-	for (auto it = vocabulary.begin(); it != vocabulary.end(); it++)
+	for (const auto& [enWord, ruWords] : vocabulary)
 	{
-		output << "[" << it->first << "] ";
-		for (auto it1 = it->second.begin(); it1 != it->second.end(); it1++)
+		output << "[" << enWord << "] ";
+		for (auto it = ruWords.begin(); it != ruWords.end(); it++)
 		{
-			output << *it1;
-			if (it1 != it->second.end() - 1)
+			output << *it;
+			if (it != ruWords.end() - 1)
 			{
 				output << ", ";
 			}
@@ -60,15 +68,14 @@ bool SaveVocabulary(const std::string& vocabularyFileName, Vocabulary& vocabular
 	return true;
 }
 
-bool PrintTranslation(std::ostream& output, std::string word, Vocabulary& vocabulary)
+bool PrintTranslation(std::ostream& output, const std::string& word, const Vocabulary& vocabulary)
 {
-	std::optional<ListOfWords> translationOpt = TranslateWord(word, vocabulary);
-	if (!translationOpt)
+	ListOfWords translation = TranslateWord(word, vocabulary);
+	if (translation.empty())
 	{
 		return false;
 	}
-	ListOfWords translation = translationOpt.value();
-	for (auto it = translation.begin(); it < translation.end(); it++)
+	for (auto it = translation.begin(); it != translation.end(); it++)
 	{
 		output << *it;
 		if (it != translation.end() - 1)
@@ -81,22 +88,20 @@ bool PrintTranslation(std::ostream& output, std::string word, Vocabulary& vocabu
 	return true;
 }
 
-void AskAndSaveChanges(std::string& vocabularyFileName, Vocabulary& vocabulary)
+void AskAndSaveChanges(const std::string& vocabularyFileName, const Vocabulary& vocabulary)
 {
-	
 	std::string str;
 	std::cout << "The vocabulary has been modified. Enter Y or y to save before exiting\n";
 	getline(std::cin, str);
 	if (str == "Y" || str == "y")
 	{
-		if (vocabularyFileName.empty())
-		{
-			std::cout << "Enter file name to save\n";
-			getline(std::cin, vocabularyFileName);
-		}
 		if (SaveVocabulary(vocabularyFileName, vocabulary))
 		{
 			std::cout << "Changes saved to " << vocabularyFileName << ". Goodbye\n";
+		}
+		else
+		{
+			std::cout << "Vocabulary could not be saved. Goodbye\n";
 		}
 	}
 	else
@@ -105,18 +110,14 @@ void AskAndSaveChanges(std::string& vocabularyFileName, Vocabulary& vocabulary)
 	}
 }
 
-void RunTranslator(std::string& vocabularyFileName, Vocabulary& vocabulary)
+void RunTranslator(Vocabulary& vocabulary, bool& vocabularyChanged)
 {
-	bool vocabularyChanged = false;
+	vocabularyChanged = false;
 	std::string word;
 	while (getline(std::cin, word))
 	{
 		if (word == "...")
 		{
-			if (vocabularyChanged)
-			{
-				AskAndSaveChanges(vocabularyFileName, vocabulary);
-			}
 			break;
 		}
 		if (!PrintTranslation(std::cout, word, vocabulary))
@@ -150,8 +151,25 @@ int main(int argc, char* argv[])
 			return 1;
 		}
 	}
+	else if (argc > 2)
+	{
+		std::cout << "Invalid number of arguments\n";
+		std::cout << "Usage: translator.exe [<vocabulary file>]\n";
+		return 1;
+	}
 
-	RunTranslator(vocabularyFileName, vocabulary);
+	bool vocabularyChanged = false;
+	RunTranslator(vocabulary, vocabularyChanged);
+
+	if (vocabularyChanged)
+	{
+		if (vocabularyFileName.empty())
+		{
+			std::cout << "Enter file name to save\n";
+			getline(std::cin, vocabularyFileName);
+		}
+		AskAndSaveChanges(vocabularyFileName, vocabulary);
+	}
 
 	return 0;
 }

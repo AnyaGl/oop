@@ -13,46 +13,43 @@ bool IsRusWord(const std::string& word)
 	return true;
 }
 
-std::optional<ListOfWords> GetRusTranslation(std::string word, Vocabulary& vocabulary)
+ListOfWords GetRusTranslation(const std::string& word, const Vocabulary& vocabulary)
 {
-	if (vocabulary.find(word) == vocabulary.end())
+	if (auto it = vocabulary.find(word); it != vocabulary.end())
 	{
-		return std::nullopt;
+		return it->second;
 	}
-	ListOfWords translation = vocabulary[word];
-	return translation;
+	return {};
 }
 
-std::optional<ListOfWords> GetEnTranslation(std::string word, Vocabulary& vocabulary)
+ListOfWords GetEnTranslation(const std::string& word, const Vocabulary& vocabulary)
 {
-	ListOfWords translation;
-	for (auto it = vocabulary.begin(); it != vocabulary.end(); it++)
+	for (const auto& [enWord, ruWords] : vocabulary)
 	{
-		for (auto it1 = it->second.begin(); it1 != it->second.end(); it1++)
+		for (const auto& ruWord : ruWords)
 		{
-			if (*it1 == word)
+			if (ruWord == word)
 			{
-				translation.push_back(it->first);
-				return translation;
+				return { enWord };
 			}
 		}
 	}
-	return std::nullopt;
+	return {};
 }
 
-std::optional<ListOfWords> TranslateWord(std::string word, Vocabulary& vocabulary)
+ListOfWords TranslateWord(std::string word, const Vocabulary& vocabulary)
 {
 	std::transform(word.begin(), word.end(), word.begin(), tolower);
-	std::optional<ListOfWords> translation = GetRusTranslation(word, vocabulary);
-	if (!translation)
-	{
-		translation = GetEnTranslation(word, vocabulary);
-		if (!translation)
-		{
-			return std::nullopt;
-		}
+	ListOfWords translation;
+	if (translation = GetRusTranslation(word, vocabulary); !translation.empty())
+	{				
+		return translation;
 	}
-	return translation;
+	if (translation = GetEnTranslation(word, vocabulary); !translation.empty())
+	{
+		return translation;
+	}
+	return {};
 }
 
 void AddWord(std::string word, std::string translation, Vocabulary& vocabulary)

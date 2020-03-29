@@ -1,5 +1,7 @@
 [apple] яблоко
 [ball] мяч
 [cat] кот, кошка
+[dog] собака
+[meat] мясо
 [red] красный
 [the red square] Красная Площадь

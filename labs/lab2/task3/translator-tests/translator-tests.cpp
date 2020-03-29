@@ -15,7 +15,7 @@ TEST_CASE("Must be returned translation of the word")
 	CHECK(TranslateWord("apple", vocabulary) == ListOfWords{ "яблоко" });
 	CHECK(TranslateWord("bALl", vocabulary) == ListOfWords{ "мяч" });
 	CHECK(TranslateWord("The Red Square", vocabulary) == ListOfWords{ "Красная Площадь" });
-	CHECK(TranslateWord("meat", vocabulary) == std::nullopt);
+	CHECK(TranslateWord("meat", vocabulary) == ListOfWords{});
 }
 
 TEST_CASE("Translations of words must be added to the vocabulary")
