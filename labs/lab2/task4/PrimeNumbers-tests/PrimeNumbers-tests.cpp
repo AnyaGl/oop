@@ -33,8 +33,10 @@ TEST_CASE("If upper bound >= 2, prime numbers set must be returned")
 	CHECK(result == required);
 }
 
+#if !_DEBUG
 TEST_CASE("If upper bound == max value (100'000'000), prime numbers set must be contains 5761455 numbers")
 {
 	result = GeneratePrimeNumbersSet(100'000'000);
 	CHECK(result.size() == 5761455);
 }
+#endif
