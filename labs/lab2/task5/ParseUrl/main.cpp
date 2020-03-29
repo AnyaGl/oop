@@ -1,7 +1,7 @@
 #include "ParseUrl.h"
 #include <iostream>
 
-void PrintUrlInfo(std::string const& host, int port, std::string const& document)
+void PrintUrlInfo(const std::string& host, int port, const std::string& document)
 {
 	std::cout << "HOST: " << host << '\n';
 	std::cout << "PORT: " << port << '\n';

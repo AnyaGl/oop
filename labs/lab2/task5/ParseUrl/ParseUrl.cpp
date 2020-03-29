@@ -28,7 +28,7 @@ std::optional<Protocol> GetProtocol(std::string protocol)
 	return std::nullopt;
 }
 
-std::optional<int> GetPort(std::string port, Protocol const& protocol)
+std::optional<int> GetPort(const std::string& port, const Protocol& protocol)
 {
 	if (port.empty())
 	{
