@@ -3,18 +3,18 @@
 
 std::vector<bool> SelectPrimeNumbers(uint32_t upperBound)
 {
-	std::vector<bool> flags((uint64_t)upperBound + 1, true);
+	std::vector<bool> isPrime((uint64_t)upperBound + 1, true);
 	for (uint32_t i = 2; i * i <= upperBound; i++)
 	{
-		if (flags[i])
+		if (isPrime[i])
 		{
 			for (uint32_t j = i * i; j <= upperBound; j += i)
 			{
-				flags[j] = false;
+				isPrime[j] = false;
 			}
 		}
 	}
-	return flags;
+	return isPrime;
 }
 
 std::set<int> GenerateSet(const std::vector<bool>& numbers)
@@ -37,9 +37,9 @@ std::set<int> GeneratePrimeNumbersSet(int upperBound)
 		return std::set<int>{};
 	}
 
-	std::vector<bool> numbers = SelectPrimeNumbers(upperBound);
+	std::vector<bool> isPrime = SelectPrimeNumbers(upperBound);
 
-	std::set<int> primeNumbers = GenerateSet(numbers);
+	std::set<int> primeNumbers = GenerateSet(isPrime);
 
 	return primeNumbers;
 }
