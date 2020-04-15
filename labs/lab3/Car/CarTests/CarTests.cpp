@@ -1,5 +1,4 @@
-﻿#define CATCH_CONFIG_MAIN
-#include "../Car/Car.h"
+﻿#include "../Car/Car.h"
 #include "catch2/catch.hpp"
 
 TEST_CASE("Engine must be off by default")
@@ -187,6 +186,22 @@ TEST_CASE("Engine must be turned off at zero speed in neutral gear")
 
 	car.SetSpeed(0);
 	CHECK(car.TurnOffEngine());
+}
+
+TEST_CASE("To reverse gear only at zero speed")
+{
+	CCar car;
+	car.TurnOnEngine();
+
+	car.SetGear(-1);
+	car.SetSpeed(20);
+	car.SetGear(0);
+	CHECK(!car.SetGear(-1));
+
+	car.SetSpeed(0);
+	CHECK(car.SetGear(-1));
+	CHECK(car.GetGear() == -1);
+
 }
 
 TEST_CASE("If engine is off, only neutral gear can be")

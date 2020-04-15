@@ -1,7 +1,7 @@
-#define CATCH_CONFIG_MAIN
 #include "../Car/Car.h"
 #include "../Car/CarControl.h"
 #include "catch2/catch.hpp"
+#include <sstream>
 
 void VerifyCommandHandling(const std::string& command, const std::string& expectedResult, CCar& car)
 {
