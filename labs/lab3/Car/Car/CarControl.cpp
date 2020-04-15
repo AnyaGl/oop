@@ -60,10 +60,6 @@ bool CCarControl::EngineOn()
 	{
 		m_output << "Engine is on\n";
 	}
-	else
-	{
-		m_output << "Failed to turn on engine\n";
-	}
 
 	return result;
 }
