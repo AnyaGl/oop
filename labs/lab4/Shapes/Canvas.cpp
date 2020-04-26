@@ -9,9 +9,9 @@ CCanvas::CCanvas(sf::RenderWindow& window)
 
 sf::Color GetRGBColor(uint32_t color)
 {
-	int blue = color % 256;
-	int green = (color / 256) % 256;
-	int red = ((color / 256) / 256) % 256;
+	uint32_t blue = color % 256;
+	uint32_t green = (color / 256) % 256;
+	uint32_t red = ((color / 256) / 256) % 256;
 
 	return sf::Color(red, green, blue);
 }
@@ -39,7 +39,7 @@ void CCanvas::DrawPolygon(std::vector<CPoint> points, uint32_t outlineColor, uin
 
 	shape.setPointCount(points.size());
 
-	for (int i = 0; i < points.size(); i++)
+	for (size_t i = 0; i < points.size(); i++)
 	{
 		shape.setPoint(i, GetCoordOnCanvas(points[i]));
 	}
