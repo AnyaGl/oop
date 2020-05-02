@@ -170,7 +170,7 @@ TEST_CASE("Division must return the quotient of numbers")
 
 	SECTION("Division by zero must throw an exception")
 	{
-		CHECK_THROWS(rational1 /= 0);
+		CHECK_THROWS(rational1 / 0);
 	}
 }
 
