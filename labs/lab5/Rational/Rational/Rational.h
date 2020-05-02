@@ -9,6 +9,8 @@ public:
 	CRational(int value);
 	CRational(int numerator, int denominator);
 
+	void NormalizeFraction();
+
 	int GetNumerator() const;
 	int GetDenominator() const;
 
@@ -40,4 +42,4 @@ bool operator>(const CRational& rational1, const CRational& rational2);
 bool operator>=(const CRational& rational1, const CRational& rational2);
 
 std::ostream& operator<<(std::ostream& stream, const CRational& rational);
-std::istream& operator>>(std::istream& stream, const CRational& rational);
+std::istream& operator>>(std::istream& stream, CRational& rational);
