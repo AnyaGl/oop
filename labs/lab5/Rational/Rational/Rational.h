@@ -9,8 +9,6 @@ public:
 	CRational(int value);
 	CRational(int numerator, int denominator);
 
-	void NormalizeFraction();
-
 	int GetNumerator() const;
 	int GetDenominator() const;
 
@@ -26,6 +24,8 @@ public:
 	CRational& operator/=(const CRational& rational);
 
 private:
+	void NormalizeFraction();
+
 	int m_numerator;
 	int m_denominator;
 };
