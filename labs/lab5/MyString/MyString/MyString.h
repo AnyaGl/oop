@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <stdexcept>
 
 class CMyString
 {
@@ -8,7 +9,7 @@ public:
 	CMyString(const char* pString);
 	CMyString(const char* pString, size_t length);
 	CMyString(CMyString const& other);
-	CMyString(CMyString&& other);
+	CMyString(CMyString&& other) noexcept;
 	CMyString(std::string const& stlString);
 	~CMyString();
 
@@ -18,7 +19,7 @@ public:
 	void Clear();
 
 	CMyString& operator=(const CMyString& other);
-	CMyString& operator=(CMyString&& other);
+	CMyString& operator=(CMyString&& other) noexcept;
 	CMyString const friend operator+(const CMyString& str1, const CMyString& str2);
 	CMyString& operator+=(const CMyString& other);
 
