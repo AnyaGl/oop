@@ -140,16 +140,13 @@ TEST_CASE("<, >, <=, >= должны сравнивать две строки")
 {
 	CMyString str1("1235");
 	CMyString str2("1234");
-	CHECK(!(str1 < str2));
 	CHECK(str1 > str2);
-	CHECK(!(str1 <= str2));
 	CHECK(str1 >= str2);
+	CHECK(str2 < str1);
 
 	str2 += CMyString("\0", 1);
 	CHECK(str1 < str2);
-	CHECK(!(str1 > str2));
 	CHECK(str1 <= str2);
-	CHECK(!(str1 >= str2));
 }
 
 TEST_CASE("[] должен осуществлять индексированный доступ к символам строки по целочисленному индексу для чтения или записи")
