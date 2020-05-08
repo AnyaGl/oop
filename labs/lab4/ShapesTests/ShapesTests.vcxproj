@@ -178,10 +178,13 @@
     <ClCompile Include="..\Shapes\ProcessShapes.cpp" />
     <ClCompile Include="..\Shapes\Rectangle.cpp" />
     <ClCompile Include="..\Shapes\Triangle.cpp" />
+    <ClCompile Include="CircleTests.cpp" />
+    <ClCompile Include="LineSegmentTests.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MockCanvas.cpp" />
     <ClCompile Include="ProcessShapesTests.cpp" />
-    <ClCompile Include="ShapesTests.cpp" />
+    <ClCompile Include="RectangleTests.cpp" />
+    <ClCompile Include="TriangleTests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Shapes\Canvas.h" />
