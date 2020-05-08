@@ -5,35 +5,35 @@
 
 using namespace std::literals;
 
-TEST_CASE("Конструктор по умолчанию формирует строку нулевой длины")
+TEST_CASE("Default constructor must create a zero-length string")
 {
 	CMyString str;
 	CHECK(str.GetLength() == 0);
 	CHECK(str.GetStringData() == std::string(""));
 }
 
-TEST_CASE("Конструктор, принимающий строку stl, инициализирует строку данными этой строки")
+TEST_CASE("Constructor that takes stl string must initialize string with data of stl string")
 {
 	CMyString str("asdbcd"s);
 	CHECK(str.GetLength() == 6);
 	CHECK(str.GetStringData() == std::string("asdbcd"));
 }
 
-TEST_CASE("Конструктор, принимающий указатель на массив символов, инициализирует строку данными строки с завершающим нулевым символом")
+TEST_CASE("Constructor that takes pointer to array of characters must initialize string with string data that ends with \\0")
 {
 	CMyString str("asdbcd");
 	CHECK(str.GetLength() == 6);
 	CHECK(str.GetStringData() == std::string("asdbcd"));
 }
 
-TEST_CASE("Конструктор, принимающий указатель на массив символов и длину, инициализирует строку данными из массива заданной длины")
+TEST_CASE("Constructor that takes pointer to array of characters and length must initialize string with string data of given length")
 {
 	CMyString str("asd\0bcd", 7);
 	CHECK(str.GetLength() == 7);
 	CHECK(std::string(str.GetStringData(), 7) == std::string("asd\0bcd", 7));
 }
 
-TEST_CASE("SubString() должен возвращать подстроку с заданной позиции длиной не больше length символов")
+TEST_CASE("SubString() must return substring from given position with length <= passed length value")
 {
 	CMyString str("123\0qwerty", 10);
 
@@ -52,7 +52,7 @@ TEST_CASE("SubString() должен возвращать подстроку с �
 	CHECK_THROWS(str.SubString(10));
 }
 
-TEST_CASE("Clear() должен очищать строку (строка становится нулевой длины)")
+TEST_CASE("Clear() must clear string (string becomes zero length)")
 {
 	CMyString str("123\0qwerty", 10);
 	str.Clear();
@@ -60,7 +60,7 @@ TEST_CASE("Clear() должен очищать строку (строка ста
 	CHECK(str.GetStringData() == std::string(""));
 }
 
-TEST_CASE("оператор копирования = должен присваивать переменной значение другой переменной")
+TEST_CASE("Assignment operator = must assign variable the value of another variable")
 {
 	CMyString str1;
 	CMyString str2("123");
@@ -73,7 +73,7 @@ TEST_CASE("оператор копирования = должен присваи
 	CHECK(str1.GetStringData() == std::string("123"));
 }
 
-TEST_CASE("оператор перемещения = должен присваивать переменной значение другой переменной, которая в итоге обнулится")
+TEST_CASE("Move assignment operator = must assign variable value of another variable that will be cleared")
 {
 	CMyString str1;
 	CMyString str2("123");
@@ -90,7 +90,7 @@ TEST_CASE("оператор перемещения = должен присваи
 	CHECK(str1.GetStringData() == std::string("123"));
 }
 
-TEST_CASE("+ должен выполнять конкатенацию двух строк")
+TEST_CASE("+ must concatenate two strings")
 {
 	CMyString resString = "123" + CMyString("\0qwerty", 7);
 	CHECK(resString.GetLength() == 10);
@@ -105,7 +105,7 @@ TEST_CASE("+ должен выполнять конкатенацию двух �
 	CHECK(std::string(resString.GetStringData()) == std::string("123qwerty"));
 }
 
-TEST_CASE("+= должен выполнять конкатенацию двух строк с присваиванием")
+TEST_CASE("+= must concatenate two strings with assignment")
 {
 	CMyString resString("123\0", 4);
 	resString += CMyString("qwerty");
@@ -117,7 +117,7 @@ TEST_CASE("+= должен выполнять конкатенацию двух 
 	CHECK(std::string(resString.GetStringData(), 20) == std::string("123\0qwerty123\0qwerty", 20));
 }
 
-TEST_CASE("== должен проверить две строки на равенство")
+TEST_CASE("== must check string equality")
 {
 	CMyString str1("123\0", 4);
 	CMyString str2("123", 3);
@@ -126,7 +126,7 @@ TEST_CASE("== должен проверить две строки на раве�
 	CHECK(str1 == str2);
 }
 
-TEST_CASE("!= должен проверить две строки на неравенство")
+TEST_CASE("!= must check string inequality")
 {
 	CMyString str1("123\0", 4);
 	CMyString str2("123", 3);
@@ -136,7 +136,7 @@ TEST_CASE("!= должен проверить две строки на нера�
 	CHECK(!(str1 != str2));
 }
 
-TEST_CASE("<, >, <=, >= должны сравнивать две строки")
+TEST_CASE("<, >, <=, >= must compare two strings")
 {
 	CMyString str1("1235");
 	CMyString str2("1234");
@@ -149,7 +149,7 @@ TEST_CASE("<, >, <=, >= должны сравнивать две строки")
 	CHECK(str1 <= str2);
 }
 
-TEST_CASE("[] должен осуществлять индексированный доступ к символам строки по целочисленному индексу для чтения или записи")
+TEST_CASE("[] must perform indexed access to string characters by integer index for reading or writing")
 {
 	CMyString str("123\0q", 5);
 	CHECK(str[3] == '\0');
@@ -157,7 +157,7 @@ TEST_CASE("[] должен осуществлять индексированны
 	CHECK(str[3] == '4');
 }
 
-TEST_CASE(">> должен считывать из входного потока")
+TEST_CASE(">> must read from the input stream")
 {
 	CMyString str;
 	std::stringstream ss;
@@ -167,7 +167,7 @@ TEST_CASE(">> должен считывать из входного потока
 	CHECK(str.GetStringData() == std::string("123"));
 }
 
-TEST_CASE("<< должен записывать в выходной поток")
+TEST_CASE("<< must write to the output stream")
 {
 	CMyString str("123\0q", 5);
 	std::stringstream ss;
