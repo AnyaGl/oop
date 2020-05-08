@@ -187,7 +187,7 @@ bool operator>=(const CMyString& str1, const CMyString& str2)
 std::ostream& operator<<(std::ostream& stream, const CMyString& str)
 {
 	std::string resultStr;
-	for (size_t i = 0; i < str.m_length; i++) //begin
+	for (size_t i = 0; i < str.m_length; i++)
 	{
 		stream << str[i];
 	}
@@ -198,6 +198,6 @@ std::istream& operator>>(std::istream& stream, CMyString& str)
 {
 	std::string inputStr;
 	stream >> inputStr;
-	str = CMyString(inputStr);	
+	str = CMyString(inputStr);
 	return stream;
 }
