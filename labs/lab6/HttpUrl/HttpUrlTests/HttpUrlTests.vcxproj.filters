@@ -21,9 +21,15 @@
     <ClCompile Include="..\HttpUrl\HttpUrl.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="..\HttpUrl\UrlParsingError.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\HttpUrl\HttpUrl.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HttpUrl\UrlParsingError.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>

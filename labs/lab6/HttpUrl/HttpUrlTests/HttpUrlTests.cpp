@@ -22,9 +22,9 @@ TEST_CASE("Constructor, that takes domain, document, [protocol], must initialize
 {
 	CHttpUrl url("www.mysite", "/doc", Protocol::HTTPS);
 	CHECK(url.GetDomain() == "www.mysite");
-	CHECK(url.GetDocument() == "/docs");
+	CHECK(url.GetDocument() == "/doc");
 	CHECK(url.GetProtocol() == Protocol::HTTPS);
-	CHECK(url.GetPort() == 80);
+	CHECK(url.GetPort() == 443);
 
 	SECTION("Default protocol must be HTTP")
 	{
@@ -43,7 +43,7 @@ TEST_CASE("Constructor, that takes domain, document, [protocol], must initialize
 
 	SECTION("If failed, an exception must be thrown")
 	{
-		CHECK_THROWS("", "/doc");
+		CHECK_THROWS(CHttpUrl("", "/doc"));
 	}
 }
 
@@ -51,7 +51,7 @@ TEST_CASE("Constructor, that takes domain, document, protocol, port, must initia
 {
 	CHttpUrl url("www.mysite", "/doc", Protocol::HTTPS, 123);
 	CHECK(url.GetDomain() == "www.mysite");
-	CHECK(url.GetDocument() == "/docs");
+	CHECK(url.GetDocument() == "/doc");
 	CHECK(url.GetProtocol() == Protocol::HTTPS);
 	CHECK(url.GetPort() == 123);
 
@@ -66,9 +66,9 @@ TEST_CASE("Constructor, that takes domain, document, protocol, port, must initia
 
 	SECTION("If failed, an exception must be thrown")
 	{
-		CHECK_THROWS("", "/doc", Protocol::HTTPS, 123);
-		CHECK_THROWS("www.mysite", "/doc", Protocol::HTTPS, 65536);
-		CHECK_THROWS("www.mysite", "/doc", Protocol::HTTP, 0);
+		CHECK_THROWS(CHttpUrl("", "/doc", Protocol::HTTPS, 123));
+		CHECK_THROWS(CHttpUrl("www.mysite", "/doc", Protocol::HTTPS, (short)65536));
+		CHECK_THROWS(CHttpUrl("www.mysite", "/doc", Protocol::HTTP, 0));
 	}
 }
 
@@ -80,7 +80,7 @@ TEST_CASE("GetUrl() must return url string representation")
 	SECTION("Standard port for HTTP and HTTPS mustn't be included in string")
 	{
 		CHttpUrl url2("www.mysite", "doc", Protocol::HTTP);
-		CHECK(url1.GetURL() == "http://www.mysite/doc");
+		CHECK(url2.GetURL() == "http://www.mysite/doc");
 	}
 }
 
