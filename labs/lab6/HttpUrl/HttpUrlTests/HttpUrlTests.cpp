@@ -10,6 +10,12 @@ TEST_CASE("Constructor that takes URL must parse it")
 	CHECK(url.GetProtocol() == Protocol::HTTPS);
 	CHECK(url.GetPort() == 123);
 
+	CHttpUrl url1("http://www.mysite");
+	CHECK(url1.GetDomain() == "www.mysite");
+	CHECK(url1.GetDocument() == "/");
+	CHECK(url1.GetProtocol() == Protocol::HTTP);
+	CHECK(url1.GetPort() == 80);
+
 	SECTION("If failed, an exception must be thrown")
 	{
 		CHECK_THROWS(CHttpUrl("http:/my.com"));
