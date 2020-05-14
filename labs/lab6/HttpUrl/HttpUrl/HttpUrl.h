@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+
 enum class Protocol
 {
 	HTTP,
@@ -18,8 +19,15 @@ public:
 	std::string GetDocument() const;
 	Protocol GetProtocol() const;
 	unsigned short GetPort() const;
+	static std::string ProtocolToString(Protocol const& protocol);
 
 private:
+	void ParseUrl(const std::string& url);
+	static unsigned short GetDefaultPort(Protocol protocol);
+	static std::string GetUrlDocument(const std::string& document);
+	static Protocol GetProtocol(std::string protocol);
+	static unsigned short GetPort(const std::string& port, const Protocol& protocol);
+
 	std::string m_domain;
 	std::string m_document;
 	Protocol m_protocol;
