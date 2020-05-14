@@ -148,9 +148,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="HttpUrl.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="UrlParsingError.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HttpUrl.h" />
+    <ClInclude Include="UrlParsingError.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
