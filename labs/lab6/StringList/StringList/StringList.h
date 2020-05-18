@@ -33,7 +33,7 @@ public:
 		CIterator(Node* node, bool isReverse = false);
 
 	public:
-		CIterator() = delete;
+		CIterator() = default;
 		std::string& operator*() const;
 
 		CIterator& operator++();
@@ -47,7 +47,7 @@ public:
 
 	private:
 		Node* m_node = nullptr;
-		bool m_isReverse;
+		bool m_isReverse = false;
 	};
 
 	CIterator begin();
@@ -84,11 +84,11 @@ public:
 	std::string& GetFrontElement();
 	std::string const& GetFrontElement() const;
 
+	bool operator==(const CStringList& list) const;
+	bool operator!=(const CStringList& list) const;
+
 private:
 	size_t m_size = 0;
 	std::unique_ptr<Node> m_firstNode;
 	Node* m_lastNode = nullptr;
 };
-
-bool operator==(const CStringList& list1, const CStringList& list2);
-bool operator!=(const CStringList& list1, const CStringList& list2);

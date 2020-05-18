@@ -2,14 +2,14 @@
 #include "catch2/catch.hpp"
 #include "../StringList/StringList.h"
 
-TEST_CASE("Конструктор по умолчанию создает пустой список")
+TEST_CASE("Default constructor must create an empty list")
 {
 	CStringList list;
 	CHECK(list.GetSize() == 0);
 	CHECK(list.IsEmpty());
 }
 
-TEST_CASE("PushBack() должен добавить строку в конец списка")
+TEST_CASE("PushBack() must add string to the end of list")
 {
 	CStringList list;
 
@@ -22,7 +22,7 @@ TEST_CASE("PushBack() должен добавить строку в конец �
 	CHECK(list.GetBackElement() == "345");
 }
 
-TEST_CASE("PushFront() должен добавить строку в начало списка")
+TEST_CASE("PushFront() must add string to the begin of list")
 {
 	CStringList list;
 
@@ -35,7 +35,7 @@ TEST_CASE("PushFront() должен добавить строку в начал�
 	CHECK(list.GetFrontElement() == "345");
 }
 
-TEST_CASE("Clear() должен очистить список (список станет пустым)")
+TEST_CASE("Clear() must clear list (list will become empty)")
 {
 	CStringList list;
 	list.PushBack("123");
@@ -46,7 +46,7 @@ TEST_CASE("Clear() должен очистить список (список ст
 	CHECK(list.IsEmpty());
 }
 
-TEST_CASE("Insert() должен вставить элемент в позицию, задаваемую итератором")
+TEST_CASE("Insert() must insert element at the position specified by iterator")
 {
 	CStringList list;
 	list.Insert(list.begin(), "34");
@@ -57,7 +57,7 @@ TEST_CASE("Insert() должен вставить элемент в позици
 	CHECK(list.GetBackElement() == "56");
 }
 
-TEST_CASE("Erase() должен удалить элемент в позиции, задаваемой итератором")
+TEST_CASE("Erase() must delete element at the position specified by iterator")
 {
 	CStringList list;
 	list.PushBack("12");
@@ -72,7 +72,7 @@ TEST_CASE("Erase() должен удалить элемент в позиции,
 	CHECK(list.GetBackElement() == "34");
 }
 
-TEST_CASE("Копирующий конструктор должен создавать копию переданного объекта")
+TEST_CASE("Copy constructor must create a copy of the passed object")
 {
 	CStringList list;
 	list.PushBack("12");
@@ -83,7 +83,7 @@ TEST_CASE("Копирующий конструктор должен создав
 	CHECK(copyList == list);
 }
 
-TEST_CASE("Перемещающий конструктор должен перемещать объект")
+TEST_CASE("Move constructor must move the object")
 {
 	CStringList list;
 	list.PushBack("12");
@@ -98,7 +98,7 @@ TEST_CASE("Перемещающий конструктор должен пере
 	CHECK(list == CStringList());
 }
 
-TEST_CASE("Копирующий оператор присваивания должен присваивать одному списку копию другого")
+TEST_CASE("Copy assignment operator must assign copy of one list to another")
 {
 	CStringList list;
 	list.PushBack("12");
@@ -109,7 +109,7 @@ TEST_CASE("Копирующий оператор присваивания дол
 	CHECK(copyList == list);
 }
 
-TEST_CASE("Перемещающий оператор присваивания должен перемещать объект")
+TEST_CASE("Move assignment operator must assign list of another list that will be cleared")
 {
 	CStringList list;
 	list.PushBack("12");
@@ -124,7 +124,7 @@ TEST_CASE("Перемещающий оператор присваивания д
 	CHECK(list == CStringList());
 }
 
-TEST_CASE("Оператор * должен возвращать ссылку на объект")
+TEST_CASE("The * operator must return an object reference")
 {
 	CStringList list;
 	list.PushBack("12");
@@ -133,7 +133,7 @@ TEST_CASE("Оператор * должен возвращать ссылку н�
 	CHECK(*(list.begin()) == "12");
 }
 
-TEST_CASE("Постфиксный оператор ++ должен возвращать текущий итератор, а затем его изменить")
+TEST_CASE("Postfix operator ++ must return the current iterator and then change it")
 {
 	CStringList list;
 	list.PushBack("12");
@@ -147,7 +147,7 @@ TEST_CASE("Постфиксный оператор ++ должен возвра�
 	CHECK(*(rit++) == "56");
 }
 
-TEST_CASE("Префиксный оператор ++ должен изменить итератор и вернуть его")
+TEST_CASE("Prefix operator ++ must change the iterator and return it")
 {
 	CStringList list;
 	list.PushBack("12");
@@ -161,7 +161,7 @@ TEST_CASE("Префиксный оператор ++ должен изменит�
 	CHECK(*(++rit) == "34");
 }
 
-TEST_CASE("Постфиксный оператор -- должен возвращать текущий итератор, а затем его изменить")
+TEST_CASE("Postfix operator -- must return the current iterator and then change it")
 {
 	CStringList list;
 	list.PushBack("12");
@@ -175,7 +175,7 @@ TEST_CASE("Постфиксный оператор -- должен возвра�
 	CHECK(*(rit--) == "12");
 }
 
-TEST_CASE("Префиксный оператор -- должен изменить итератор и вернуть его")
+TEST_CASE("Prefix operator -- must change the iterator and return it")
 {
 	CStringList list;
 	list.PushBack("12");
@@ -189,7 +189,7 @@ TEST_CASE("Префиксный оператор -- должен изменит�
 	CHECK(*(--rit) == "12");
 }
 
-TEST_CASE("Операторы == и != должны проверять на равеноство два итератора")
+TEST_CASE("Operators == and != must check for equality of two iterators")
 {
 	CStringList list;
 	list.PushBack("12");
@@ -201,7 +201,7 @@ TEST_CASE("Операторы == и != должны проверять на ра
 	CHECK(it1 == --it2);
 }
 
-TEST_CASE("begin() должен возвращать итератор, указывающий на начало списка")
+TEST_CASE("begin() must return an iterator pointing to begin of the list")
 {
 	CStringList list;
 	list.PushBack("12");
@@ -211,7 +211,7 @@ TEST_CASE("begin() должен возвращать итератор, указ�
 	CHECK(*it == "12");
 }
 
-TEST_CASE("begin() and cbegin() должны возвращать константный итератор, указывающий на начало списка")
+TEST_CASE("begin() and cbegin() must return a constant iterator pointing to begin of the list")
 {
 	CStringList list;
 	list.PushBack("12");
@@ -225,7 +225,7 @@ TEST_CASE("begin() and cbegin() должны возвращать констан
 	CHECK(*it == "12");
 }
 
-TEST_CASE("end() должен возвращать итератор, указывающий элемент следующий за последним")
+TEST_CASE("end() must return an iterator pointing to the element following the last")
 {
 	CStringList list;
 	list.PushBack("12");
@@ -235,7 +235,7 @@ TEST_CASE("end() должен возвращать итератор, указы�
 	CHECK(*(--it) == "34");
 }
 
-TEST_CASE("end() and cend() должны возвращать константный итератор, указывающий элемент следующий за последним")
+TEST_CASE("end() and cend() must return a constant iterator pointing to the element following the last")
 {
 	CStringList list;
 	list.PushBack("12");
@@ -249,7 +249,7 @@ TEST_CASE("end() and cend() должны возвращать константн
 	CHECK(*(--it) == "34");
 }
 
-TEST_CASE("rbegin() должен возвращать реверсивный итератор, указывающий на последний элемент списка")
+TEST_CASE("rbegin() must return reverse iterator pointing to the last element of the list")
 {
 	CStringList list;
 	list.PushBack("12");
@@ -259,7 +259,7 @@ TEST_CASE("rbegin() должен возвращать реверсивный и�
 	CHECK(*(it) == "34");
 }
 
-TEST_CASE("rbegin and crbegin() должны возвращать реверсивный константный итератор, указывающий на последний элемент списка")
+TEST_CASE("rbegin and crbegin() must return reverse constant iterator pointing to the last element of the list")
 {
 	CStringList list;
 	list.PushBack("12");
@@ -273,7 +273,7 @@ TEST_CASE("rbegin and crbegin() должны возвращать реверси
 	CHECK(*it == "34");
 }
 
-TEST_CASE("rend() должен возвращать реверсивный итератор, указывающий на элемент, стоящий перед первым")
+TEST_CASE("rend() must return reverse iterator pointing to the element before the first")
 {
 	CStringList list;
 	list.PushBack("12");
@@ -283,7 +283,7 @@ TEST_CASE("rend() должен возвращать реверсивный ит�
 	CHECK(*(--it) == "12");
 }
 
-TEST_CASE("rend and crend() должны возвращать реверсивный константный итератор, указывающий на элемент, стоящий перед первым")
+TEST_CASE("rend and crend() must return reverse constant iterator pointing to the element before the first")
 {
 	CStringList list;
 	list.PushBack("12");
@@ -297,7 +297,7 @@ TEST_CASE("rend and crend() должны возвращать реверсивн
 	CHECK(*(--it) == "12");
 }
 
-TEST_CASE("Операторы == и != должны проверять на равеноство два списка")
+TEST_CASE("Operators == and != must check for equality of two lists")
 {
 	CStringList list1;
 	list1.PushBack("12");
