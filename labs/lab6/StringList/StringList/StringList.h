@@ -7,22 +7,32 @@ class CStringList
 {
 	struct Node
 	{
-		Node(const std::string& data, Node* prev, std::unique_ptr<Node>&& next)
-			: data(data)
-			, prev(prev)
+		Node(Node* prev, std::unique_ptr<Node>&& next)
+			: prev(prev)
 			, next(std::move(next))
 		{
 		}
-		std::string data;
+		virtual std::string& GetData();
+		virtual ~Node() {}
 		Node* prev;
 		std::unique_ptr<Node> next;
 	};
+	struct NodeWithData : CStringList::Node
+	{
+		NodeWithData(const std::string& data, Node* prev, std::unique_ptr<Node>&& next)
+			: data(data)
+			, Node(prev, std::move(next))
+		{
+		}
+		std::string& GetData() override;
+		std::string data;
+	};
 
 public:
-	CStringList() = default;
+	CStringList();
 	~CStringList();
 	CStringList(const CStringList& list);
-	CStringList(CStringList && list) noexcept;
+	CStringList(CStringList&& list) noexcept;
 
 	CStringList& operator=(const CStringList& list);
 	CStringList& operator=(CStringList&& list) noexcept;
@@ -88,7 +98,7 @@ public:
 	bool operator!=(const CStringList& list) const;
 
 private:
-	size_t m_size = 0;
+	size_t m_size;
+	Node* m_lastNode;
 	std::unique_ptr<Node> m_firstNode;
-	Node* m_lastNode = nullptr;
 };

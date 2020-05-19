@@ -1,6 +1,6 @@
 ﻿#define CATCH_CONFIG_MAIN
-#include "catch2/catch.hpp"
 #include "../StringList/StringList.h"
+#include "catch2/catch.hpp"
 
 TEST_CASE("Default constructor must create an empty list")
 {
@@ -33,6 +33,7 @@ TEST_CASE("PushFront() must add string to the begin of list")
 	list.PushFront("345");
 	CHECK(list.GetSize() == 2);
 	CHECK(list.GetFrontElement() == "345");
+	CHECK(list.GetBackElement() == "123");
 }
 
 TEST_CASE("Clear() must clear list (list will become empty)")
@@ -49,9 +50,10 @@ TEST_CASE("Clear() must clear list (list will become empty)")
 TEST_CASE("Insert() must insert element at the position specified by iterator")
 {
 	CStringList list;
-	list.Insert(list.begin(), "34");
+	list.Insert(list.begin(), "56");
 	list.Insert(list.begin(), "12");
-	list.Insert(--list.end(), "56");
+	list.Insert(--list.end(), "34");
+
 	CHECK(list.GetSize() == 3);
 	CHECK(list.GetFrontElement() == "12");
 	CHECK(list.GetBackElement() == "56");
