@@ -3,14 +3,17 @@
 
 CStringList::CStringList()
 {
-	m_size = 0;
 	auto lastNode = std::make_unique<Node>(nullptr, nullptr);
-	m_lastNode = lastNode.get();
-	m_firstNode = std::make_unique<Node>(nullptr, std::move(lastNode));
+	Node* pLastNode = lastNode.get();
+	auto firstNode = std::make_unique<Node>(nullptr, std::move(lastNode));
+
+	m_lastNode = pLastNode;
+	m_firstNode = std::move(firstNode);
 	m_lastNode->prev = m_firstNode.get();
+	m_size = 0;
 }
 
-CStringList::~CStringList()
+CStringList::~CStringList() noexcept
 {
 	Clear();
 }

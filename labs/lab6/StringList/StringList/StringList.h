@@ -30,7 +30,7 @@ class CStringList
 
 public:
 	CStringList();
-	~CStringList();
+	~CStringList() noexcept;
 	CStringList(const CStringList& list);
 	CStringList(CStringList&& list) noexcept;
 
