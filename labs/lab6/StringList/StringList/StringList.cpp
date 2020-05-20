@@ -240,7 +240,7 @@ void CStringList::Erase(const CIterator& it)
 	{
 		throw std::runtime_error("Cannot erase element from null position");
 	}
-	else if (it == end() || it == rend())
+	if (it == end() || it == rend())
 	{
 		throw std::runtime_error("Cannot erase element from end position");	
 	}
@@ -250,16 +250,6 @@ void CStringList::Erase(const CIterator& it)
 		m_firstNode->next = std::make_unique<Node>(nullptr, std::move(m_lastNode->prev->next));
 		m_lastNode->prev = m_firstNode.get();
 	}
-	//else if (it == begin())
-	//{
-	//	m_firstNode->next->prev = nullptr;
-	//	m_firstNode = std::move(m_firstNode->next);
-	//}
-	//else if (it == --end())
-	//{
-	//	m_lastNode = m_lastNode->prev;
-	//	m_lastNode->next = nullptr;
-	//}
 	else
 	{
 		it.m_node->next->prev = it.m_node->prev;
@@ -286,39 +276,35 @@ bool CStringList::IsEmpty() const
 	return (m_size == 0);
 }
 
+void CStringList::ThrowWithEmptyList() const
+{
+	if (IsEmpty())
+	{
+		throw std::runtime_error("Cannot get element from empty list");	
+	}
+}
+
 std::string& CStringList::GetBackElement()
 {
-	if (!m_lastNode->prev)
-	{
-		throw std::runtime_error("GetBackElement() called on empty list");
-	}
+	ThrowWithEmptyList();
 	return m_lastNode->prev->GetData();
 }
 
 std::string const& CStringList::GetBackElement() const
 {
-	if (!m_lastNode->prev)
-	{
-		throw std::runtime_error("GetBackElement() called on empty list");
-	}
+	ThrowWithEmptyList();
 	return m_lastNode->prev->GetData();
 }
 
 std::string& CStringList::GetFrontElement()
 {
-	if (!m_firstNode->next)
-	{
-		throw std::runtime_error("GetFrontElement() called on empty list");
-	}
+	ThrowWithEmptyList();
 	return m_firstNode->next.get()->GetData();
 }
 
 std::string const& CStringList::GetFrontElement() const
 {
-	if (!m_firstNode->next)
-	{
-		throw std::runtime_error("GetFrontElement() called on empty list");
-	}
+	ThrowWithEmptyList();
 	return m_firstNode->next.get()->GetData();
 }
 

@@ -50,13 +50,15 @@ TEST_CASE("Clear() must clear list (list will become empty)")
 TEST_CASE("Insert() must insert element at the position specified by iterator")
 {
 	CStringList list;
-	list.Insert(list.begin(), "56");
 	list.Insert(list.begin(), "12");
+	list.Insert(list.end(), "56");
 	list.Insert(--list.end(), "34");
 
 	CHECK(list.GetSize() == 3);
 	CHECK(list.GetFrontElement() == "12");
 	CHECK(list.GetBackElement() == "56");
+
+	CHECK_THROWS(list.Insert(++list.end(), "34"));
 }
 
 TEST_CASE("Erase() must delete element at the position specified by iterator")
@@ -72,6 +74,44 @@ TEST_CASE("Erase() must delete element at the position specified by iterator")
 	list.Erase(--list.end());
 	CHECK(list.GetSize() == 2);
 	CHECK(list.GetBackElement() == "34");
+
+	CHECK_THROWS(list.Erase(++list.end()));
+	CHECK_THROWS(list.Erase(list.end()));
+	CHECK_THROWS(list.Erase(--list.begin()));
+
+}
+
+TEST_CASE("GetBackElement() must return last element from list")
+{
+	CStringList list;
+	CHECK_THROWS(list.GetBackElement());
+
+	list.PushBack("12");
+	list.PushBack("34");
+
+	CHECK(list.GetBackElement() == "34");
+
+	SECTION("Can be const")
+	{
+		const CStringList constList(list);
+		CHECK(constList.GetBackElement() == "34");
+	}
+}
+TEST_CASE("GetFrontElement() must return first element from list")
+{
+	CStringList list;
+	CHECK_THROWS(list.GetFrontElement());
+
+	list.PushBack("12");
+	list.PushBack("34");
+
+	CHECK(list.GetFrontElement() == "12");
+
+	SECTION("Can be const")
+	{
+		const CStringList constList(list);
+		CHECK(constList.GetFrontElement() == "12");
+	}
 }
 
 TEST_CASE("Copy constructor must create a copy of the passed object")
@@ -106,7 +146,8 @@ TEST_CASE("Copy assignment operator must assign copy of one list to another")
 	list.PushBack("12");
 	list.PushBack("34");
 
-	CStringList copyList = list;
+	CStringList copyList;
+	copyList = list;
 	CHECK(copyList.GetSize() == 2);
 	CHECK(copyList == list);
 }
@@ -133,6 +174,9 @@ TEST_CASE("The * operator must return an object reference")
 	list.PushBack("34");
 
 	CHECK(*(list.begin()) == "12");
+
+	CHECK_THROWS(*(list.end()));
+	CHECK_THROWS(*(++list.end()));
 }
 
 TEST_CASE("Postfix operator ++ must return the current iterator and then change it")
@@ -147,6 +191,11 @@ TEST_CASE("Postfix operator ++ must return the current iterator and then change 
 
 	auto rit = list.rbegin();
 	CHECK(*(rit++) == "56");
+
+	SECTION("Cannot increment null")
+	{
+		CHECK_THROWS(++(++list.end()));
+	}
 }
 
 TEST_CASE("Prefix operator ++ must change the iterator and return it")
@@ -175,6 +224,11 @@ TEST_CASE("Postfix operator -- must return the current iterator and then change 
 
 	auto rit = --list.rend();
 	CHECK(*(rit--) == "12");
+
+	SECTION("Cannot decrement null")
+	{
+		CHECK_THROWS(--(--(--list.begin())));
+	}
 }
 
 TEST_CASE("Prefix operator -- must change the iterator and return it")
@@ -200,7 +254,10 @@ TEST_CASE("Operators == and != must check for equality of two iterators")
 	auto it1 = list.begin();
 	auto it2 = list.rend();
 	CHECK(it1 != it2);
-	CHECK(it1 == --it2);
+	CHECK_FALSE(it1 == it2);
+	--it2;
+	CHECK(it1 == it2);
+	CHECK_FALSE(it1 != it2);
 }
 
 TEST_CASE("begin() must return an iterator pointing to begin of the list")
@@ -308,7 +365,14 @@ TEST_CASE("Operators == and != must check for equality of two lists")
 	CStringList list2;
 	list2.PushBack("12");
 	CHECK(list1 != list2);
+	CHECK_FALSE(list1 == list2);
 
 	list2.PushBack("34");
 	CHECK(list1 == list2);
+	CHECK_FALSE(list1 != list2);
+
+	list2.Erase(--list2.end());
+	list2.PushBack("123");
+	CHECK(list1 != list2);
+	CHECK_FALSE(list1 == list2);
 }

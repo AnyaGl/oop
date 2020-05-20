@@ -43,7 +43,7 @@ public:
 		CIterator(Node* node, bool isReverse = false);
 
 	public:
-		CIterator() = default;
+		CIterator() = delete;
 		std::string& operator*() const;
 
 		CIterator& operator++();
@@ -98,6 +98,8 @@ public:
 	bool operator!=(const CStringList& list) const;
 
 private:
+	void ThrowWithEmptyList() const;
+
 	size_t m_size;
 	Node* m_lastNode;
 	std::unique_ptr<Node> m_firstNode;
