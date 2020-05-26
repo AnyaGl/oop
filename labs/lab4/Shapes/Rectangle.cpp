@@ -46,7 +46,7 @@ uint32_t CRectangle::GetFillColor() const
 	return m_fillColor;
 }
 
-void CRectangle::Draw(ICanvas& canvas)
+void CRectangle::Draw(ICanvas& canvas) const
 {
 	CPoint rightTop = { m_leftTop.x + GetWidth(), m_leftTop.y };
 	CPoint leftBottom = { m_leftTop.x, m_leftTop.y - GetHeight() };

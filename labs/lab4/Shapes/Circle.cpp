@@ -44,7 +44,7 @@ uint32_t CCircle::GetFillColor() const
 	return m_fillColor;
 }
 
-void CCircle::Draw(ICanvas& canvas)
+void CCircle::Draw(ICanvas& canvas) const
 {
 	canvas.DrawCircle(m_center, m_radius, m_outlineColor, m_fillColor);
 }

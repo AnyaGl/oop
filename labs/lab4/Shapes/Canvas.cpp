@@ -1,6 +1,6 @@
 #include "Canvas.h"
 
-CCanvas::CCanvas(sf::RenderWindow& window)
+CCanvas::CCanvas(sf::RenderTarget& window)
 	: m_window(window)
 {
 	m_width = window.getSize().x;

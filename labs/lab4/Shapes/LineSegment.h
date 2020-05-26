@@ -11,7 +11,7 @@ public:
 	double GetPerimeter() const override;
 	std::string ToString() const override;
 	uint32_t GetOutlineColor() const override;
-	void Draw(ICanvas& canvas) override;
+	void Draw(ICanvas& canvas) const override;
 
 	CPoint GetStartPoint();
 	CPoint GetEndPoint();

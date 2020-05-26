@@ -4,6 +4,6 @@
 class ICanvasDrawable
 {
 public:
-	virtual ~ICanvasDrawable(){};
-	virtual void Draw(ICanvas& canvas) = 0;
+	virtual ~ICanvasDrawable(){}
+	virtual void Draw(ICanvas& canvas) const = 0;
 };
