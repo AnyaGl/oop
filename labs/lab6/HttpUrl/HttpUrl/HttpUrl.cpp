@@ -14,10 +14,6 @@ CHttpUrl::CHttpUrl(std::string const& url)
 	{
 		throw CUrlParsingError(error.what());
 	}
-	catch (const std::runtime_error& error)
-	{
-		throw error;
-	}
 }
 
 CHttpUrl::CHttpUrl(std::string const& domain, std::string const& document, Protocol protocol)
@@ -127,11 +123,8 @@ std::string CHttpUrl::ProtocolToString(Protocol const& protocol)
 
 std::string CHttpUrl::GetURL() const
 {
-	std::string port;
-	if (m_port != GetDefaultPort(m_protocol))
-	{
-		port = ":" + std::to_string(m_port);
-	}
+	std::string port = (m_port != GetDefaultPort(m_protocol)) ? ":" + std::to_string(m_port) : "";
+
 	return ProtocolToString(m_protocol) + "://" + m_domain + port + m_document;
 }
 
