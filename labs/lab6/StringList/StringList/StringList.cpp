@@ -159,34 +159,36 @@ const CStringList::CIterator CStringList::cend() const
 	return CIterator(m_lastNode);
 }
 
+const bool REVERSE_ITERATOR = true;
+
 CStringList::CIterator CStringList::rbegin()
 {
-	return CIterator(m_lastNode->prev, true);
+	return CIterator(m_lastNode->prev, REVERSE_ITERATOR);
 }
 
 CStringList::CIterator CStringList::rend()
 {
-	return CIterator(m_firstNode.get(), true);
+	return CIterator(m_firstNode.get(), REVERSE_ITERATOR);
 }
 
 const CStringList::CIterator CStringList::rbegin() const
 {
-	return CIterator(m_lastNode->prev, true);
+	return CIterator(m_lastNode->prev, REVERSE_ITERATOR);
 }
 
 const CStringList::CIterator CStringList::rend() const
 {
-	return CIterator(m_firstNode.get(), true);
+	return CIterator(m_firstNode.get(), REVERSE_ITERATOR);
 }
 
 const CStringList::CIterator CStringList::crbegin() const
 {
-	return CIterator(m_lastNode->prev, true);
+	return CIterator(m_lastNode->prev, REVERSE_ITERATOR);
 }
 
 const CStringList::CIterator CStringList::crend() const
 {
-	return CIterator(m_firstNode.get(), true);
+	return CIterator(m_firstNode.get(), REVERSE_ITERATOR);
 }
 
 void CStringList::PushBack(const std::string& data)
