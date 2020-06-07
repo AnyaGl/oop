@@ -163,8 +163,6 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="IntListTests.cpp" />
-    <ClCompile Include="main.cpp" />
     <ClCompile Include="StringListTests.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
