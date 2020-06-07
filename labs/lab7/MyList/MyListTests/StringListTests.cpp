@@ -1,38 +1,79 @@
-#include "catch2/catch.hpp"
+#define CATCH_CONFIG_MAIN
 #include "../MyList/MyList.h"
+#include "catch2/catch.hpp"
 
 TEST_CASE("Default constructor must create an empty list")
 {
-	CMyList<std::string> list;
-	CHECK(list.GetSize() == 0);
-	CHECK(list.IsEmpty());
+	SECTION("String list")
+	{
+		CMyList<std::string> list;
+		CHECK(list.GetSize() == 0);
+		CHECK(list.IsEmpty());
+	}
+	SECTION("Int list")
+	{
+		CMyList<int> list;
+		CHECK(list.GetSize() == 0);
+		CHECK(list.IsEmpty());
+	}
 }
 
-TEST_CASE("PushBack() must add string to the end of list")
+TEST_CASE("PushBack() must add element to the end of list")
 {
-	CMyList<std::string> list;
+	SECTION("String list")
+	{
+		CMyList<std::string> list;
 
-	list.PushBack("123");
-	CHECK(list.GetSize() == 1);
-	CHECK(list.GetBackElement() == "123");
+		list.PushBack("123");
+		CHECK(list.GetSize() == 1);
+		CHECK(list.GetBackElement() == "123");
 
-	list.PushBack("345");
-	CHECK(list.GetSize() == 2);
-	CHECK(list.GetBackElement() == "345");
+		list.PushBack("345");
+		CHECK(list.GetSize() == 2);
+		CHECK(list.GetBackElement() == "345");
+	}
+	SECTION("Int list")
+	{
+		CMyList<int> list;
+
+		list.PushBack(2);
+		CHECK(list.GetSize() == 1);
+		CHECK(list.GetBackElement() == 2);
+
+		list.PushBack(1);
+		CHECK(list.GetSize() == 2);
+		CHECK(list.GetBackElement() == 1);
+	}
 }
 
-TEST_CASE("PushFront() must add string to the begin of list")
+TEST_CASE("PushFront() must add element to the begin of list")
 {
-	CMyList<std::string> list;
+	SECTION("String list")
+	{
+		CMyList<std::string> list;
 
-	list.PushFront("123");
-	CHECK(list.GetSize() == 1);
-	CHECK(list.GetFrontElement() == "123");
+		list.PushFront("123");
+		CHECK(list.GetSize() == 1);
+		CHECK(list.GetFrontElement() == "123");
 
-	list.PushFront("345");
-	CHECK(list.GetSize() == 2);
-	CHECK(list.GetFrontElement() == "345");
-	CHECK(list.GetBackElement() == "123");
+		list.PushFront("345");
+		CHECK(list.GetSize() == 2);
+		CHECK(list.GetFrontElement() == "345");
+		CHECK(list.GetBackElement() == "123");
+	}
+	SECTION("Int list")
+	{
+		CMyList<int> list;
+
+		list.PushFront(3);
+		CHECK(list.GetSize() == 1);
+		CHECK(list.GetFrontElement() == 3);
+
+		list.PushFront(1);
+		CHECK(list.GetSize() == 2);
+		CHECK(list.GetFrontElement() == 1);
+		CHECK(list.GetBackElement() == 3);
+	}
 }
 
 TEST_CASE("Clear() must clear list (list will become empty)")
@@ -48,16 +89,32 @@ TEST_CASE("Clear() must clear list (list will become empty)")
 
 TEST_CASE("Insert() must insert element at the position specified by iterator")
 {
-	CMyList<std::string> list;
-	list.Insert(list.begin(), "12");
-	list.Insert(list.end(), "56");
-	list.Insert(--list.end(), "34");
+	SECTION("String list")
+	{
+		CMyList<std::string> list;
+		list.Insert(list.begin(), "12");
+		list.Insert(list.end(), "56");
+		list.Insert(--list.end(), "34");
 
-	CHECK(list.GetSize() == 3);
-	CHECK(list.GetFrontElement() == "12");
-	CHECK(list.GetBackElement() == "56");
+		CHECK(list.GetSize() == 3);
+		CHECK(list.GetFrontElement() == "12");
+		CHECK(list.GetBackElement() == "56");
 
-	CHECK_THROWS(list.Insert(++list.end(), "34"));
+		CHECK_THROWS(list.Insert(++list.end(), "34"));
+	}
+	SECTION("Int list")
+	{
+		CMyList<int> list;
+		list.Insert(list.begin(), 1);
+		list.Insert(list.end(), 3);
+		list.Insert(--list.end(), 2);
+
+		CHECK(list.GetSize() == 3);
+		CHECK(list.GetFrontElement() == 1);
+		CHECK(list.GetBackElement() == 3);
+
+		CHECK_THROWS(list.Insert(++list.end(), 4));
+	}
 }
 
 TEST_CASE("Erase() must delete element at the position specified by iterator")
@@ -81,18 +138,37 @@ TEST_CASE("Erase() must delete element at the position specified by iterator")
 
 TEST_CASE("GetBackElement() must return last element from list")
 {
-	CMyList<std::string> list;
-	CHECK_THROWS(list.GetBackElement());
-
-	list.PushBack("12");
-	list.PushBack("34");
-
-	CHECK(list.GetBackElement() == "34");
-
-	SECTION("Can be const")
+	SECTION("String list")
 	{
-		const CMyList<std::string> constList(list);
-		CHECK(constList.GetBackElement() == "34");
+		CMyList<std::string> list;
+		CHECK_THROWS(list.GetBackElement());
+
+		list.PushBack("12");
+		list.PushBack("34");
+
+		CHECK(list.GetBackElement() == "34");
+
+		SECTION("Can be const")
+		{
+			const CMyList<std::string> constList(list);
+			CHECK(constList.GetBackElement() == "34");
+		}
+	}
+	SECTION("Int list")
+	{
+		CMyList<int> list;
+		CHECK_THROWS(list.GetBackElement());
+
+		list.PushBack(15);
+		list.PushBack(123);
+
+		CHECK(list.GetBackElement() == 123);
+
+		SECTION("Can be const")
+		{
+			const CMyList<int> constList(list);
+			CHECK(constList.GetBackElement() == 123);
+		}
 	}
 }
 TEST_CASE("GetFrontElement() must return first element from list")
@@ -114,67 +190,142 @@ TEST_CASE("GetFrontElement() must return first element from list")
 
 TEST_CASE("Copy constructor must create a copy of the passed object")
 {
-	CMyList<std::string> list;
-	list.PushBack("12");
-	list.PushBack("34");
+	SECTION("String list")
+	{
+		CMyList<std::string> list;
+		list.PushBack("12");
+		list.PushBack("34");
 
-	CMyList<std::string> copyList(list);
-	CHECK(copyList.GetSize() == 2);
-	CHECK(copyList == list);
+		CMyList<std::string> copyList(list);
+		CHECK(copyList.GetSize() == 2);
+		CHECK(copyList == list);
+	}
+	SECTION("Int list")
+	{
+		CMyList<int> list;
+		list.PushBack(14);
+		list.PushBack(21);
+
+		CMyList<int> copyList(list);
+		CHECK(copyList.GetSize() == 2);
+		CHECK(copyList == list);
+	}
 }
 
 TEST_CASE("Move constructor must move the object")
 {
-	CMyList<std::string> list;
-	list.PushBack("12");
-	list.PushBack("34");
+	SECTION("String list")
+	{
+		CMyList<std::string> list;
+		list.PushBack("12");
+		list.PushBack("34");
 
-	CMyList<std::string> copyList(list);
+		CMyList<std::string> copyList(list);
 
-	CMyList<std::string> moveList(std::move(list));
-	CHECK(moveList.GetSize() == 2);
-	CHECK(moveList == copyList);
-	CHECK(list.GetSize() == 0);
-	CHECK(list == CMyList<std::string>());
+		CMyList<std::string> moveList(std::move(list));
+		CHECK(moveList.GetSize() == 2);
+		CHECK(moveList == copyList);
+		CHECK(list.GetSize() == 0);
+		CHECK(list == CMyList<std::string>());
+	}
+	SECTION("Int list")
+	{
+		CMyList<int> list;
+		list.PushBack(14);
+		list.PushBack(23);
+
+		CMyList<int> copyList(list);
+
+		CMyList<int> moveList(std::move(list));
+		CHECK(moveList.GetSize() == 2);
+		CHECK(moveList == copyList);
+		CHECK(list.GetSize() == 0);
+		CHECK(list == CMyList<int>());
+	}
 }
 
 TEST_CASE("Copy assignment operator must assign copy of one list to another")
 {
-	CMyList<std::string> list;
-	list.PushBack("12");
-	list.PushBack("34");
+	SECTION("String list")
+	{
+		CMyList<std::string> list;
+		list.PushBack("12");
+		list.PushBack("34");
 
-	CMyList<std::string> copyList;
-	copyList = list;
-	CHECK(copyList.GetSize() == 2);
-	CHECK(copyList == list);
+		CMyList<std::string> copyList;
+		copyList = list;
+		CHECK(copyList.GetSize() == 2);
+		CHECK(copyList == list);
+	}
+	SECTION("Int list")
+	{
+		CMyList<int> list;
+		list.PushBack(12);
+		list.PushBack(23);
+
+		CMyList<int> copyList;
+		copyList = list;
+		CHECK(copyList.GetSize() == 2);
+		CHECK(copyList == list);
+	}
 }
 
 TEST_CASE("Move assignment operator must assign list of another list that will be cleared")
 {
-	CMyList<std::string> list;
-	list.PushBack("12");
-	list.PushBack("34");
+	SECTION("String list")
+	{
+		CMyList<std::string> list;
+		list.PushBack("12");
+		list.PushBack("34");
 
-	CMyList<std::string> copyList(list);
+		CMyList<std::string> copyList(list);
 
-	CMyList<std::string> moveList = std::move(list);
-	CHECK(moveList.GetSize() == 2);
-	CHECK(moveList == copyList);
-	CHECK(list.GetSize() == 0);
-	CHECK(list == CMyList<std::string>());
+		CMyList<std::string> moveList = std::move(list);
+		CHECK(moveList.GetSize() == 2);
+		CHECK(moveList == copyList);
+		CHECK(list.GetSize() == 0);
+		CHECK(list == CMyList<std::string>());
+	}
+	SECTION("Int list")
+	{
+		CMyList<int> list;
+		list.PushBack(12);
+		list.PushBack(23);
+
+		CMyList<int> copyList(list);
+
+		CMyList<int> moveList = std::move(list);
+		CHECK(moveList.GetSize() == 2);
+		CHECK(moveList == copyList);
+		CHECK(list.GetSize() == 0);
+		CHECK(list == CMyList<int>());
+	}
 }
 
 TEST_CASE("The * operator must return an object reference")
 {
-	CMyList<std::string> list;
-	list.PushBack("12");
-	list.PushBack("34");
+	SECTION("String list")
+	{
+		CMyList<std::string> list;
+		list.PushBack("12");
+		list.PushBack("34");
 
-	CHECK(*(list.begin()) == "12");
+		CHECK(*(list.begin()) == "12");
 
-	CHECK_THROWS(*(list.end()));
-	CHECK_THROWS(*(++list.end()));
+		CHECK_THROWS(*(list.end()));
+		CHECK_THROWS(*(++list.end()));
+	}
+	SECTION("Int list")
+	{
+		CMyList<int> list;
+		list.PushBack(12);
+		list.PushBack(23);
+
+		CHECK(*(list.begin()) == 12);
+
+		CHECK_THROWS(*(list.end()));
+		CHECK_THROWS(*(++list.end()));
+	}
 }
 
 TEST_CASE("Postfix operator ++ must return the current iterator and then change it")
@@ -356,21 +507,44 @@ TEST_CASE("rend and crend() must return reverse constant iterator pointing to th
 
 TEST_CASE("Operators == and != must check for equality of two lists")
 {
-	CMyList<std::string> list1;
-	list1.PushBack("12");
-	list1.PushBack("34");
+	SECTION("String list")
+	{
+		CMyList<std::string> list1;
+		list1.PushBack("12");
+		list1.PushBack("34");
 
-	CMyList<std::string> list2;
-	list2.PushBack("12");
-	CHECK(list1 != list2);
-	CHECK_FALSE(list1 == list2);
+		CMyList<std::string> list2;
+		list2.PushBack("12");
+		CHECK(list1 != list2);
+		CHECK_FALSE(list1 == list2);
 
-	list2.PushBack("34");
-	CHECK(list1 == list2);
-	CHECK_FALSE(list1 != list2);
+		list2.PushBack("34");
+		CHECK(list1 == list2);
+		CHECK_FALSE(list1 != list2);
 
-	list2.Erase(--list2.end());
-	list2.PushBack("123");
-	CHECK(list1 != list2);
-	CHECK_FALSE(list1 == list2);
+		list2.Erase(--list2.end());
+		list2.PushBack("123");
+		CHECK(list1 != list2);
+		CHECK_FALSE(list1 == list2);
+	}
+	SECTION("Int list")
+	{
+		CMyList<int> list1;
+		list1.PushBack(12);
+		list1.PushBack(23);
+
+		CMyList<int> list2;
+		list2.PushBack(12);
+		CHECK(list1 != list2);
+		CHECK_FALSE(list1 == list2);
+
+		list2.PushBack(23);
+		CHECK(list1 == list2);
+		CHECK_FALSE(list1 != list2);
+
+		list2.Erase(--list2.end());
+		list2.PushBack(123);
+		CHECK(list1 != list2);
+		CHECK_FALSE(list1 == list2);
+	}
 }
