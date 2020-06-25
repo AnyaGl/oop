@@ -149,11 +149,16 @@ TEST_CASE("<, >, <=, >= must compare two strings")
 	CHECK(str2 < str1);
 	CHECK_FALSE(str2 > str1);
 
-	str2 += CMyString("\0", 1);
-	CHECK(str1 > str2);
-
 	CHECK(str2 <= str1);
 	CHECK_FALSE(str2 >= str1);
+
+	str1 = CMyString("123");
+	
+	CHECK(str1 < str2);
+	CHECK_FALSE(str1 > str2);
+	
+	CHECK(str2 > str1);
+	CHECK_FALSE(str2 < str1);
 }
 
 TEST_CASE("[] must perform indexed access to string characters by integer index for reading or writing")
