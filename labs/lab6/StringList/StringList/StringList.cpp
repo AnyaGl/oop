@@ -16,8 +16,6 @@ CStringList::CStringList()
 CStringList::~CStringList() noexcept
 {
 	Clear();
-	m_firstNode = nullptr;
-	m_lastNode = nullptr;
 }
 
 CStringList::CStringList(const CStringList& list)
@@ -32,7 +30,6 @@ CStringList::CStringList(const CStringList& list)
 
 CStringList::CStringList(CStringList&& list) noexcept
 {
-	Clear();
 	m_firstNode = std::move(list.m_firstNode);
 	m_lastNode = list.m_lastNode;
 	m_size = list.m_size;
