@@ -31,8 +31,9 @@ CMyString::CMyString(CMyString&& other) noexcept
 	: m_pString(other.m_pString)
 	, m_length(other.m_length)
 {
-	other.m_pString = nullptr;
 	other.m_length = 0;
+	other.m_pString = new char[1];
+	other.m_pString[0] = '\0';
 }
 
 CMyString::CMyString(std::string const& stlString)
@@ -89,8 +90,10 @@ CMyString& CMyString::operator=(CMyString&& other) noexcept
 		delete[] m_pString;
 		m_pString = other.m_pString;
 		m_length = other.m_length;
-		other.m_pString = nullptr;
+
 		other.m_length = 0;
+		other.m_pString = new char[1];
+		other.m_pString[0] = '\0';
 	}
 	return *this;
 }
@@ -120,9 +123,13 @@ CMyString const operator+(const CMyString& str1, const CMyString& str2)
 
 	CMyString result(sumOfStrings, sumLength);
 
+	delete[] sumOfStrings;
+
 	return result;
 }
 
+namespace
+{
 enum class CompareResult
 {
 	Equal,
@@ -132,15 +139,7 @@ enum class CompareResult
 
 CompareResult CompareStrings(const CMyString& str1, const CMyString& str2)
 {
-	if (str1.GetLength() < str2.GetLength())
-	{
-		return CompareResult::Less;
-	}
-	if (str1.GetLength() > str2.GetLength())
-	{
-		return CompareResult::Greater;
-	}
-	for (size_t i = 0; i < str1.GetLength(); i++)
+	for (size_t i = 0; i < std::min(str1.GetLength(), str2.GetLength()); i++)
 	{
 		if (str1[i] < str2[i])
 		{
@@ -151,12 +150,21 @@ CompareResult CompareStrings(const CMyString& str1, const CMyString& str2)
 			return CompareResult::Greater;
 		}
 	}
+	if (str1.GetLength() < str2.GetLength())
+	{
+		return CompareResult::Less;
+	}
+	if (str1.GetLength() > str2.GetLength())
+	{
+		return CompareResult::Greater;
+	}
 	return CompareResult::Equal;
 }
+} // namespace
 
 bool operator==(const CMyString& str1, const CMyString& str2)
 {
-	return CompareStrings(str1, str2) == CompareResult::Equal;
+	return str1.GetLength() == str2.GetLength() && CompareStrings(str1, str2) == CompareResult::Equal;
 }
 
 bool operator!=(const CMyString& str1, const CMyString& str2)
