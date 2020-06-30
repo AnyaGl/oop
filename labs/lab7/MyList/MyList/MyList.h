@@ -73,8 +73,6 @@ public:
 	}
 	CMyList(CMyList&& list) noexcept
 	{
-		Clear();
-
 		m_firstNode = std::move(list.m_firstNode);
 		m_lastNode = list.m_lastNode;
 		m_size = list.m_size;
