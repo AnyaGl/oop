@@ -50,7 +50,7 @@ TEST_CASE("Clear() must clear list (list will become empty)")
 TEST_CASE("Insert() must insert element at the position specified by iterator")
 {
 	CStringList list;
-	list.Insert(list.begin(), "12");
+	list.Insert(list.cbegin(), "12");
 	list.Insert(list.end(), "56");
 	list.Insert(--list.end(), "34");
 
@@ -73,6 +73,10 @@ TEST_CASE("Erase() must delete element at the position specified by iterator")
 
 	list.Erase(--list.end());
 	CHECK(list.GetSize() == 2);
+	CHECK(list.GetBackElement() == "34");
+
+	list.Erase(list.cbegin());
+	CHECK(list.GetSize() == 1);
 	CHECK(list.GetBackElement() == "34");
 
 	CHECK_THROWS(list.Erase(++list.end()));
@@ -252,7 +256,7 @@ TEST_CASE("Operators == and != must check for equality of two iterators")
 	list.PushBack("34");
 
 	auto it1 = list.begin();
-	auto it2 = list.rend();
+	auto it2 = --list.end();
 	CHECK(it1 != it2);
 	CHECK_FALSE(it1 == it2);
 	--it2;

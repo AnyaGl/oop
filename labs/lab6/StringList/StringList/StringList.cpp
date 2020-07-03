@@ -1,5 +1,4 @@
 ﻿#include "StringList.h"
-#include <stdexcept>
 
 CStringList::CStringList()
 {
@@ -67,125 +66,58 @@ CStringList& CStringList::operator=(CStringList&& list) noexcept
 	return *this;
 }
 
-CStringList::CIterator::CIterator(Node* node, bool isReverse)
-	: m_node(node)
-	, m_isReverse(isReverse)
+CStringList::iterator CStringList::begin()
 {
+	return iterator(m_firstNode->next.get());
+}
+CStringList::iterator CStringList::end()
+{
+	return iterator(m_lastNode);
 }
 
-std::string& CStringList::CIterator::operator*() const
+CStringList::const_iterator CStringList::begin() const
 {
-	if (!m_node)
-	{
-		throw std::runtime_error("Cannot dereference empty iterator");
-	}
-	return m_node->GetData();
+	return const_iterator(m_firstNode->next.get());
+}
+CStringList::const_iterator CStringList::end() const
+{
+	return const_iterator(m_lastNode);
 }
 
-CStringList::CIterator& CStringList::CIterator::operator++()
+CStringList::const_iterator CStringList::cbegin() const
 {
-	if (!m_node)
-	{
-		throw std::runtime_error("Cannot increment empty iterator");
-	}
-	m_node = (m_isReverse) ? (m_node->prev) : (m_node->next.get());
-	return *this;
+	return const_iterator(m_firstNode->next.get());
+}
+CStringList::const_iterator CStringList::cend() const
+{
+	return const_iterator(m_lastNode);
 }
 
-CStringList::CIterator CStringList::CIterator::operator++(int)
+std::reverse_iterator<CStringList::iterator> CStringList::rbegin()
 {
-	auto copyIt = *this;
-	++*this;
-	return copyIt;
+	return std::reverse_iterator<iterator>(end());
+}
+std::reverse_iterator<CStringList::iterator> CStringList::rend()
+{
+	return std::reverse_iterator<iterator>(begin());
 }
 
-CStringList::CIterator& CStringList::CIterator::operator--()
+std::reverse_iterator<CStringList::const_iterator> CStringList::rbegin() const
 {
-	if (!m_node)
-	{
-		throw std::runtime_error("Cannot decrement empty iterator");
-	}
-	m_node = (m_isReverse) ? (m_node->next.get()) : (m_node->prev);
-	return *this;
+	return std::reverse_iterator<const_iterator>(end());
+}
+std::reverse_iterator<CStringList::const_iterator> CStringList::rend() const
+{
+	return std::reverse_iterator<const_iterator>(begin());
 }
 
-CStringList::CIterator CStringList::CIterator::operator--(int)
+std::reverse_iterator<CStringList::const_iterator> CStringList::crbegin() const
 {
-	auto copyIt = *this;
-	--*this;
-	return copyIt;
+	return std::reverse_iterator<const_iterator>(cend());
 }
-
-bool CStringList::CIterator::operator==(const CIterator& other) const
+std::reverse_iterator<CStringList::const_iterator> CStringList::crend() const
 {
-	return (other.m_node == m_node);
-}
-
-bool CStringList::CIterator::operator!=(const CIterator& other) const
-{
-	return (other.m_node != m_node);
-}
-
-CStringList::CIterator CStringList::begin()
-{
-	return CIterator(m_firstNode->next.get());
-}
-
-CStringList::CIterator CStringList::end()
-{
-	return CIterator(m_lastNode);
-}
-
-const CStringList::CIterator CStringList::begin() const
-{
-	return CIterator(m_firstNode->next.get());
-}
-
-const CStringList::CIterator CStringList::end() const
-{
-	return CIterator(m_lastNode);
-}
-
-const CStringList::CIterator CStringList::cbegin() const
-{
-	return CIterator(m_firstNode->next.get());
-}
-
-const CStringList::CIterator CStringList::cend() const
-{
-	return CIterator(m_lastNode);
-}
-
-const bool REVERSE_ITERATOR = true;
-
-CStringList::CIterator CStringList::rbegin()
-{
-	return CIterator(m_lastNode->prev, REVERSE_ITERATOR);
-}
-
-CStringList::CIterator CStringList::rend()
-{
-	return CIterator(m_firstNode.get(), REVERSE_ITERATOR);
-}
-
-const CStringList::CIterator CStringList::rbegin() const
-{
-	return CIterator(m_lastNode->prev, REVERSE_ITERATOR);
-}
-
-const CStringList::CIterator CStringList::rend() const
-{
-	return CIterator(m_firstNode.get(), REVERSE_ITERATOR);
-}
-
-const CStringList::CIterator CStringList::crbegin() const
-{
-	return CIterator(m_lastNode->prev, REVERSE_ITERATOR);
-}
-
-const CStringList::CIterator CStringList::crend() const
-{
-	return CIterator(m_firstNode.get(), REVERSE_ITERATOR);
+	return std::reverse_iterator<const_iterator>(cbegin());
 }
 
 void CStringList::PushBack(const std::string& data)
@@ -198,7 +130,7 @@ void CStringList::PushFront(const std::string& data)
 	Insert(begin(), data);
 }
 
-void CStringList::Insert(const CIterator& it, const std::string& data)
+void CStringList::Insert(const iterator& it, const std::string& data)
 {
 	if (!it.m_node)
 	{
@@ -210,20 +142,30 @@ void CStringList::Insert(const CIterator& it, const std::string& data)
 	++m_size;
 }
 
-void CStringList::Erase(const CIterator& it)
+void CStringList::Insert(const const_iterator& it, const std::string& data)
+{
+	Insert(iterator(it.m_node), data);
+}
+
+void CStringList::Erase(const iterator& it)
 {
 	if (!it.m_node)
 	{
 		throw std::runtime_error("Cannot erase element from null position");
 	}
-	if (it == end() || it == rend())
+	if (it == end() || it == --begin())
 	{
-		throw std::runtime_error("Cannot erase element from end position");	
+		throw std::runtime_error("Cannot erase element from end position");
 	}
 
 	it.m_node->next->prev = it.m_node->prev;
 	it.m_node->prev->next = std::move(it.m_node->next);
 	--m_size;
+}
+
+void CStringList::Erase(const const_iterator& it)
+{
+	Erase(iterator(it.m_node));
 }
 
 void CStringList::Clear()
@@ -248,7 +190,7 @@ void CStringList::ThrowWithEmptyList() const
 {
 	if (IsEmpty())
 	{
-		throw std::runtime_error("Cannot get element from empty list");	
+		throw std::runtime_error("Cannot get element from empty list");
 	}
 }
 
