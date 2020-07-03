@@ -63,7 +63,7 @@ unsigned short CHttpUrl::GetDefaultPort(Protocol protocol)
 
 Protocol CHttpUrl::GetProtocol(std::string protocol)
 {
-	std::transform(protocol.begin(), protocol.begin(), protocol.end(), tolower);
+	std::transform(protocol.begin(), protocol.end(), protocol.begin(), tolower);
 	if (protocol == "http")
 	{
 		return Protocol::HTTP;

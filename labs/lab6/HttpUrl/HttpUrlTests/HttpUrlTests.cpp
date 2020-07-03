@@ -73,7 +73,6 @@ TEST_CASE("Constructor, that takes domain, document, protocol, port, must initia
 	SECTION("If failed, an exception must be thrown")
 	{
 		CHECK_THROWS(CHttpUrl("", "/doc", Protocol::HTTPS, 123));
-		CHECK_THROWS(CHttpUrl("www.mysite", "/doc", Protocol::HTTPS, (short)65536));
 		CHECK_THROWS(CHttpUrl("www.mysite", "/doc", Protocol::HTTP, 0));
 	}
 }
@@ -96,4 +95,13 @@ TEST_CASE("If port is not specified, then it must be default for HTTP and HTTPS"
 	CHttpUrl url2("www.mysite", "doc", Protocol::HTTPS);
 	CHECK(url1.GetPort() == 80);
 	CHECK(url2.GetPort() == 443);
+}
+
+TEST_CASE("Protocol can be in any register")
+{
+	CHttpUrl url("Http://127.0.0.1/12");
+	CHECK(url.GetDomain() == "127.0.0.1");
+	CHECK(url.GetDocument() == "/12");
+	CHECK(url.GetProtocol() == Protocol::HTTP);
+	CHECK(url.GetPort() == 80);
 }
