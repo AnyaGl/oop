@@ -29,15 +29,6 @@ class CStringList
 		std::string data;
 	};
 
-public:
-	CStringList();
-	~CStringList() noexcept;
-	CStringList(const CStringList& list);
-	CStringList(CStringList&& list) noexcept;
-
-	CStringList& operator=(const CStringList& list);
-	CStringList& operator=(CStringList&& list) noexcept;
-
 	template <bool IsConst>
 	class CIterator
 	{
@@ -111,6 +102,15 @@ public:
 	private:
 		Node* m_node = nullptr;
 	};
+
+public:
+	CStringList();
+	~CStringList() noexcept;
+	CStringList(const CStringList& list);
+	CStringList(CStringList&& list) noexcept;
+
+	CStringList& operator=(const CStringList& list);
+	CStringList& operator=(CStringList&& list) noexcept;
 
 	using iterator = CIterator<false>;
 	using const_iterator = CIterator<true>;
